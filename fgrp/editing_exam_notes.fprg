@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="CASPER"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2022-04-23 02:02:16 &#214;&#214;"/>
+        <attribute name="created" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0yMjswMjoyOToyMSDDllM7MjQwMQ=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0yMjswMzoxNjozMCDDllM7MTtDQVNQRVI7QVRUSUNVUzsyMDIyLTAzLTI1OzAzOjE4OjQ4IMOWUzt2a2kuZnByZzs1ODQy"/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0yMzswMjowMjoxNiDDlsOWOzU7MjY0MA=="/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="sync" type="Boolean" array="False" size=""/>
+            <assign variable="sync" expression="true"/>
+            <declare name="secim" type="String" array="False" size=""/>
+            <declare name="index, index2" type="Integer" array="False" size=""/>
+            <assign variable="index" expression="0"/>
+            <assign variable="index2" expression="0"/>
+            <declare name="notlar" type="Integer" array="True" size="5"/>
+            <declare name="eskinotlar" type="Integer" array="True" size="5"/>
+            <declare name="otonot" type="Integer" array="True" size="20"/>
+            <declare name="otoeklenennot" type="String" array="True" size="15"/>
+            <output expression="&quot;Notlar Otomatik mi Belirlensin Yoksa Manuel Mi?&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Otomatik i&#231;in: 'O'&quot; &amp; ToChar(13) &amp; &quot;Manuel i&#231;in: 'M'&quot; &amp; ToChar(13) &amp; &quot;Yaz&#305;n&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Aray&#252;z Hakk&#305;nda Bilgi Almak &#304;&#231;in &#304;se 'A' Yaz&#305;n&quot;" newline="True"/>
+            <input variable="secim"/>
+            <if expression="secim == &quot;O&quot; || secim == &quot;o&quot;">
+                <then>
+                    <while expression="sync">
+                        <comment text="Bu d&#246;ng&#252; notlar&#305; belirler."/>
+                        <if expression="index == 5">
+                            <then>
+                                <assign variable="sync" expression="false"/>
+                                <comment text="index 5'e ula&#351;t&#305;&#287;&#305;nda sync (boolen) false olarak ayarla. Bu while d&#246;g&#252;s&#252;n&#252; durdurscakt&#305;r."/>
+                            </then>
+                            <else>
+                                <assign variable="index" expression="index + 1"/>
+                                <assign variable="notlar[index2]" expression="Random(80)"/>
+                                <comment text="Random say&#305; belirle"/>
+                                <assign variable="index2" expression="index2 + 1"/>
+                                <comment text="0 ve 80 aras&#305;nda 5 adet say&#305; belirle ve dizine (array) kaydet"/>
+                            </else>
+                        </if>
+                    </while>
+                    <assign variable="sync" expression="true"/>
+                    <assign variable="index" expression="0"/>
+                    <assign variable="index2" expression="0"/>
+                    <comment text="De&#287;i&#351;kenleri s&#305;f&#305;rlayal&#305;m"/>
+                    <while expression="sync">
+                        <comment text="Bu d&#246;ng&#252; eski notlar&#305; kaydeder ve yeni notlara 20 puan ekler."/>
+                        <if expression="index == 5">
+                            <then>
+                                <assign variable="sync" expression="false"/>
+                            </then>
+                            <else>
+                                <assign variable="index" expression="index + 1"/>
+                                <assign variable="eskinotlar[index2]" expression="notlar[index2]"/>
+                                <assign variable="notlar[index2]" expression="notlar[index2] + 20"/>
+                                <assign variable="index2" expression="index2 + 1"/>
+                            </else>
+                        </if>
+                    </while>
+                    <assign variable="sync" expression="true"/>
+                    <assign variable="index" expression="0"/>
+                    <assign variable="index2" expression="0"/>
+                    <comment text="De&#287;i&#351;kenleri s&#305;f&#305;rlayal&#305;m"/>
+                    <output expression="&quot;Yeni Notlar:&quot;" newline="True"/>
+                    <while expression="sync">
+                        <comment text="Bu d&#246;ng&#252; eski ve yeni notlar&#305; bir arada yazd&#305;r&#305;r."/>
+                        <if expression="index == 5">
+                            <then>
+                                <assign variable="sync" expression="false"/>
+                                <comment text="K&#305;r&#305;lma Noktas&#305; Kullanmak Yerine D&#246;ng&#252;y&#252; Kapatal&#305;m"/>
+                            </then>
+                            <else>
+                                <assign variable="index" expression="index + 1"/>
+                                <output expression="ToString(index) &amp; &quot;. &#214;&#287;rencinin; &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Eski Not: &quot; &amp; eskinotlar[index2] &amp; ToChar(13) &amp; &quot;Yeni Not: &quot; &amp; notlar[index2]" newline="True"/>
+                                <call expression="delay(500)"/>
+                                <comment text="500 Milisaniyelik Gecikme"/>
+                                <assign variable="index2" expression="index2 + 1"/>
+                            </else>
+                        </if>
+                    </while>
+                </then>
+                <else>
+                    <if expression="secim == &quot;M&quot; || secim == &quot;m&quot;">
+                        <then>
+                            <output expression="&quot;1. &#214;&#287;rencinin Notunu Giriniz: &quot;" newline="True"/>
+                            <input variable="notlar[0]"/>
+                            <output expression="&quot;2. &#214;&#287;rencinin Notunu Giriniz: &quot;" newline="True"/>
+                            <input variable="notlar[1]"/>
+                            <output expression="&quot;3. &#214;&#287;rencinin Notunu Giriniz: &quot;" newline="True"/>
+                            <input variable="notlar[2]"/>
+                            <output expression="&quot;4. &#214;&#287;rencinin Notunu Giriniz: &quot;" newline="True"/>
+                            <input variable="notlar[3]"/>
+                            <output expression="&quot;5. &#214;&#287;rencinin Notunu Giriniz: &quot;" newline="True"/>
+                            <input variable="notlar[4]"/>
+                            <call expression="delay(800)"/>
+                            <declare name="secim2" type="Integer" array="False" size=""/>
+                            <declare name="devam" type="Boolean" array="False" size=""/>
+                            <assign variable="devam" expression="true"/>
+                            <assign variable="index" expression="0"/>
+                            <assign variable="index2" expression="0"/>
+                            <while expression="sync">
+                                <if expression="index == 5">
+                                    <then>
+                                        <assign variable="sync" expression="false"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="index" expression="index + 1"/>
+                                        <if expression="notlar[index2] &gt; 100">
+                                            <then>
+                                                <assign variable="sync" expression="false"/>
+                                                <assign variable="devam" expression="false"/>
+                                            </then>
+                                            <else>
+                                                <if expression="notlar[index2] &lt; 0">
+                                                    <then>
+                                                        <assign variable="sync" expression="false"/>
+                                                        <assign variable="devam" expression="false"/>
+                                                    </then>
+                                                    <else>
+                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                    </else>
+                                                </if>
+                                            </else>
+                                        </if>
+                                    </else>
+                                </if>
+                            </while>
+                            <if expression="!devam">
+                                <then>
+                                    <output expression="&quot;Notlar 100 ve 0 Aras&#305;nda Olmal&#305;d&#305;r.&quot;" newline="True"/>
+                                </then>
+                                <else>
+                                    <output expression="&quot;Size 3 Se&#231;enek Sunuyoruz:&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;1) Herkesin Notuna +20 Puan Ekle&quot; &amp; ToChar(13) &amp; &quot;2) Herkesin Notuna Eklenecek Puan&#305; Manuel Gir&quot; &amp; ToChar(13) &amp; &quot;3) Sistem'in Kendi Not Ekleme Arac&#305;n&#305; Kullan&quot;" newline="True"/>
+                                    <input variable="secim2"/>
+                                    <if expression="secim2 == 3">
+                                        <then>
+                                            <call expression="delay(59)"/>
+                                            <assign variable="index" expression="0"/>
+                                            <assign variable="index2" expression="0"/>
+                                            <assign variable="sync" expression="true"/>
+                                            <while expression="sync">
+                                                <if expression="index == 5">
+                                                    <then>
+                                                        <assign variable="sync" expression="false"/>
+                                                    </then>
+                                                    <else>
+                                                        <assign variable="index" expression="index + 1"/>
+                                                        <assign variable="otoeklenennot[index2]" expression="puanekle(notlar[index2])"/>
+                                                        <comment text="Eklenen puan&#305; dizine yazar. Bunu tamsay&#305;ya &#231;evirmeye gerek yoktur. &#199;&#305;k&#305;&#351; da kullanaca&#287;&#305;m&#305;z i&#231;in string olarak kalabilir."/>
+                                                        <call expression="delay(59)"/>
+                                                        <if expression="otoeklenennot[index2] == &quot;pass&quot;">
+                                                            <then>
+                                                                <assign variable="otoeklenennot[index2]" expression="&quot;0&quot;"/>
+                                                            </then>
+                                                            <else>
+                                                                <assign variable="otonot[index2]" expression="notlar[index2] + ToInteger(puanekle(notlar[index2]))"/>
+                                                            </else>
+                                                        </if>
+                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                    </else>
+                                                </if>
+                                            </while>
+                                            <assign variable="index" expression="0"/>
+                                            <assign variable="index2" expression="0"/>
+                                            <assign variable="sync" expression="true"/>
+                                            <while expression="sync">
+                                                <if expression="index == 5">
+                                                    <then>
+                                                        <assign variable="sync" expression="false"/>
+                                                    </then>
+                                                    <else>
+                                                        <assign variable="index" expression="index + 1"/>
+                                                        <declare name="cikti" type="String" array="False" size=""/>
+                                                        <if expression="otoeklenennot[index2] == &quot;0&quot;">
+                                                            <then>
+                                                                <assign variable="cikti" expression="ToString(index) &amp; &quot;. &#214;&#287;rencinin; &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Eski Not: &quot; &amp; notlar[index2] &amp; ToChar(13) &amp; &quot;Yeni Not: &quot; &amp; notlar[index2] &amp; ToChar(13) &amp; &quot;Ek Puan Yok. Not Yeterli.&quot;"/>
+                                                            </then>
+                                                            <else>
+                                                                <assign variable="cikti" expression="ToString(index) &amp; &quot;. &#214;&#287;rencinin; &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Eski Not: &quot; &amp; notlar[index2] &amp; ToChar(13) &amp; &quot;Yeni Not: &quot; &amp; ToInteger(otoeklenennot[index2]) + notlar[index2] &amp; ToChar(13) &amp; &quot;Eklenen Puan: &quot; &amp; otoeklenennot[index2]"/>
+                                                            </else>
+                                                        </if>
+                                                        <output expression="cikti" newline="True"/>
+                                                        <call expression="delay(500)"/>
+                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                    </else>
+                                                </if>
+                                            </while>
+                                        </then>
+                                        <else>
+                                            <if expression="secim2 == 2">
+                                                <then>
+                                                    <assign variable="index" expression="0"/>
+                                                    <assign variable="index2" expression="0"/>
+                                                    <assign variable="sync" expression="false"/>
+                                                    <declare name="say&#305;1, say&#305;2, say&#305;3, say&#305;4, say&#305;5" type="Integer" array="False" size=""/>
+                                                    <declare name="soru1, soru2, soru3, soru4, soru5" type="Integer" array="False" size=""/>
+                                                    <comment text="Dizin Kullan&#305;lamaz. Flowgorithm Komplex Sistemlerde D&#246;g&#252; &#304;&#231;inden Dizine Veri Aktarmaya &#304;zin Vermez.&#13;&#10;Yaha hen&#252;z ben ke&#351;fedemedim :p"/>
+                                                    <call expression="delay(230)"/>
+                                                    <assign variable="soru1" expression="puaneklesoru(&quot;1&quot;, notlar[index2])"/>
+                                                    <assign variable="index2" expression="index2 + 1"/>
+                                                    <assign variable="soru2" expression="puaneklesoru(&quot;2&quot;, notlar[index2])"/>
+                                                    <assign variable="index2" expression="index2 + 1"/>
+                                                    <assign variable="soru3" expression="puaneklesoru(&quot;3&quot;, notlar[index2])"/>
+                                                    <assign variable="index2" expression="index2 + 1"/>
+                                                    <assign variable="soru4" expression="puaneklesoru(&quot;4&quot;, notlar[index2])"/>
+                                                    <assign variable="index2" expression="index2 + 1"/>
+                                                    <assign variable="soru5" expression="puaneklesoru(&quot;5&quot;, notlar[index2])"/>
+                                                    <call expression="delay(600)"/>
+                                                    <assign variable="sync" expression="true"/>
+                                                    <declare name="soruarray" type="Integer" array="True" size="5"/>
+                                                    <assign variable="soruarray[0]" expression="soru1"/>
+                                                    <assign variable="soruarray[1]" expression="soru2"/>
+                                                    <assign variable="soruarray[2]" expression="soru3"/>
+                                                    <assign variable="soruarray[3]" expression="soru4"/>
+                                                    <assign variable="soruarray[4]" expression="soru5"/>
+                                                    <if expression="(soru1 &gt; 100 &amp;&amp; soru1 &lt; 0) || (soru2 &gt; 100 &amp;&amp; soru2 &lt; 0) || (soru3 &gt; 100 &amp;&amp; soru3 &lt; 0) || (soru4 &gt; 100 &amp;&amp; soru4 &lt; 0) || (soru5 &gt; 100 &amp;&amp; soru5 &lt; 0)">
+                                                        <then>
+                                                            <output expression="&quot;Notlar&#305;n Son Hali 100 ve 0 Aras&#305;nda Olmal&#305;d&#305;r.&quot;" newline="True"/>
+                                                        </then>
+                                                        <else>
+                                                            <assign variable="index2" expression="0"/>
+                                                            <assign variable="say&#305;1" expression="soru1 + notlar[index2]"/>
+                                                            <assign variable="index2" expression="index2 + 1"/>
+                                                            <assign variable="say&#305;2" expression="soru2 + notlar[index2]"/>
+                                                            <assign variable="index2" expression="index2 + 1"/>
+                                                            <assign variable="say&#305;3" expression="soru3 + notlar[index2]"/>
+                                                            <assign variable="index2" expression="index2 + 1"/>
+                                                            <assign variable="say&#305;4" expression="soru4 + notlar[index2]"/>
+                                                            <assign variable="index2" expression="index2 + 1"/>
+                                                            <assign variable="say&#305;5" expression="soru5 + notlar[index2]"/>
+                                                            <assign variable="index2" expression="0"/>
+                                                            <assign variable="index" expression="0"/>
+                                                            <declare name="sonsay&#305;lar" type="Integer" array="True" size="5"/>
+                                                            <assign variable="sonsay&#305;lar[0]" expression="say&#305;1"/>
+                                                            <assign variable="sonsay&#305;lar[1]" expression="say&#305;2"/>
+                                                            <assign variable="sonsay&#305;lar[2]" expression="say&#305;3"/>
+                                                            <assign variable="sonsay&#305;lar[3]" expression="say&#305;4"/>
+                                                            <assign variable="sonsay&#305;lar[4]" expression="say&#305;5"/>
+                                                            <while expression="sync">
+                                                                <if expression="index == 5">
+                                                                    <then>
+                                                                        <assign variable="sync" expression="false"/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <assign variable="index" expression="index + 1"/>
+                                                                        <output expression="ToString(index) &amp; &quot;. &#214;&#287;rencinin; &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Eski Not: &quot; &amp; notlar[index2] &amp; ToChar(13) &amp; &quot;Yeni Not: &quot; &amp; sonsay&#305;lar[index2] &amp; ToChar(13) &amp; &quot;Eklenen Puan: &quot; &amp; soruarray[index2]" newline="True"/>
+                                                                        <call expression="delay(270)"/>
+                                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                                    </else>
+                                                                </if>
+                                                            </while>
+                                                        </else>
+                                                    </if>
+                                                </then>
+                                                <else>
+                                                    <if expression="secim2 == 1">
+                                                        <then>
+                                                            <while expression="sync">
+                                                                <comment text="Bu d&#246;ng&#252; notlar&#305; belirler."/>
+                                                                <if expression="index == 5">
+                                                                    <then>
+                                                                        <assign variable="sync" expression="false"/>
+                                                                        <comment text="index 5'e ula&#351;t&#305;&#287;&#305;nda sync (boolen) false olarak ayarla. Bu while d&#246;g&#252;s&#252;n&#252; durdurscakt&#305;r."/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <assign variable="index" expression="index + 1"/>
+                                                                        <assign variable="notlar[index2]" expression="Random(80)"/>
+                                                                        <comment text="Random say&#305; belirle"/>
+                                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                                        <comment text="0 ve 80 aras&#305;nda 5 adet say&#305; belirle ve dizine (array) kaydet"/>
+                                                                    </else>
+                                                                </if>
+                                                            </while>
+                                                            <assign variable="sync" expression="true"/>
+                                                            <assign variable="index" expression="0"/>
+                                                            <assign variable="index2" expression="0"/>
+                                                            <comment text="De&#287;i&#351;kenleri s&#305;f&#305;rlayal&#305;m"/>
+                                                            <while expression="sync">
+                                                                <comment text="Bu d&#246;ng&#252; eski notlar&#305; kaydeder ve yeni notlara 20 puan ekler."/>
+                                                                <if expression="index == 5">
+                                                                    <then>
+                                                                        <assign variable="sync" expression="false"/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <assign variable="index" expression="index + 1"/>
+                                                                        <assign variable="eskinotlar[index2]" expression="notlar[index2]"/>
+                                                                        <assign variable="notlar[index2]" expression="notlar[index2] + 20"/>
+                                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                                    </else>
+                                                                </if>
+                                                            </while>
+                                                            <assign variable="sync" expression="true"/>
+                                                            <assign variable="index" expression="0"/>
+                                                            <assign variable="index2" expression="0"/>
+                                                            <comment text="De&#287;i&#351;kenleri s&#305;f&#305;rlayal&#305;m"/>
+                                                            <output expression="&quot;Yeni Notlar:&quot;" newline="True"/>
+                                                            <while expression="sync">
+                                                                <comment text="Bu d&#246;ng&#252; eski ve yeni notlar&#305; bir arada yazd&#305;r&#305;r."/>
+                                                                <if expression="index == 5">
+                                                                    <then>
+                                                                        <assign variable="sync" expression="false"/>
+                                                                        <comment text="K&#305;r&#305;lma Noktas&#305; Kullanmak Yerine D&#246;ng&#252;y&#252; Kapatal&#305;m"/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <assign variable="index" expression="index + 1"/>
+                                                                        <if expression="notlar[index2] &gt; 100">
+                                                                            <then>
+                                                                                <assign variable="notlar[index2]" expression="100"/>
+                                                                                <output expression="ToString(index) &amp; &quot;. &#214;&#287;rencinin; &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Eski Not: &quot; &amp; eskinotlar[index2] &amp; ToChar(13) &amp; &quot;Yeni Not: &quot; &amp; notlar[index2]" newline="True"/>
+                                                                            </then>
+                                                                            <else>
+                                                                                <output expression="ToString(index) &amp; &quot;. &#214;&#287;rencinin; &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Eski Not: &quot; &amp; eskinotlar[index2] &amp; ToChar(13) &amp; &quot;Yeni Not: &quot; &amp; notlar[index2]" newline="True"/>
+                                                                            </else>
+                                                                        </if>
+                                                                        <comment text="20 Puan Ekleme Sonras&#305; Notu 100 ve Yukar&#305;s&#305;nda Olanlar&#305;n Notu Otomatik 100 olarak say&#305;lacakt&#305;r."/>
+                                                                        <call expression="delay(500)"/>
+                                                                        <comment text="500 Milisaniyelik Gecikme"/>
+                                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                                    </else>
+                                                                </if>
+                                                            </while>
+                                                        </then>
+                                                        <else>
+                                                            <output expression="&quot;L&#252;tfen 1, 2 veya 3 yaz&#305;n&#305;z.&quot;" newline="True"/>
+                                                            <call expression="delay(1000)"/>
+                                                            <output expression="&quot;Program Kapat&#305;l&#305;yor..&quot;" newline="True"/>
+                                                            <assign variable="index" expression="3"/>
+                                                            <while expression="sync">
+                                                                <if expression="index == 0">
+                                                                    <then>
+                                                                        <assign variable="sync" expression="false"/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <call expression="delay(1000)"/>
+                                                                        <output expression="ToString(index) &amp; &quot;..&quot;" newline="True"/>
+                                                                        <assign variable="index" expression="index - 1"/>
+                                                                    </else>
+                                                                </if>
+                                                                <comment text="Program&#305;n Kapat&#305;lmas&#305; &#304;&#231;in Saya&#231; Olu&#351;tur"/>
+                                                            </while>
+                                                        </else>
+                                                    </if>
+                                                </else>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </then>
+                        <else>
+                            <declare name="helpnum, helpnum2" type="Integer" array="False" size=""/>
+                            <declare name="loop, loop2" type="Integer" array="False" size=""/>
+                            <if expression="secim == &quot;a&quot; or secim == &quot;A&quot;">
+                                <then>
+                                    <output expression="&quot;1) Otomatik Mod Hakk&#305;nda Yard&#305;m&quot; &amp; ToChar(13) &amp; &quot;2) Manuel Mod Hakk&#305;nda Yard&#305;m&quot;" newline="True"/>
+                                    <input variable="helpnum"/>
+                                    <call expression="delay(200)"/>
+                                    <comment text="Bekleme S&#252;releri &#304;&#351;lemi Yava&#351;latabilir Fakat De&#287;i&#351;ken Atamay&#305; Sorunsuz Bir &#350;ekilde Halletmenize Yarar."/>
+                                    <assign variable="loop" expression="yard&#305;mloop(helpnum)"/>
+                                    <call expression="delay(200)"/>
+                                    <if expression="loop == 1">
+                                        <then>
+                                            <output expression="&quot;Bu Mod &#304;&#231;ersinde Bulunan Random(n) komutu, girilen de&#287;er ile 0 aras&#305;nda rastgele say&#305; se&#231;memize yarar.&quot;" newline="True"/>
+                                            <call expression="delay(7800)"/>
+                                            <output expression="&quot;Se&#231;ilen rastgele say&#305;lar not olarak dizin &#351;eklinde kaydedilir. Ard&#305;ndan while d&#246;ng&#252;s&#252; ile t&#252;m dizin objelerine +20 olarak ekleme yap&#305;l&#305;r.&quot;" newline="True"/>
+                                            <call expression="delay(9000)"/>
+                                            <output expression="&quot;Ard&#305;ndan ilk notlar ve ekleme sonras&#305;ndaki notlar yine bir while d&#246;ng&#252;s&#252; ile teker teker yazd&#305;r&#305;l&#305;r.&quot;" newline="True"/>
+                                        </then>
+                                        <else>
+                                            <output expression="&quot;1) T&#252;m Notlara 20 Puan Ekleme Hakk&#305;nda Yard&#305;m&quot; &amp; ToChar(13) &amp; &quot;2) Manuel Puan Ekleme Hakk&#305;nda Yard&#305;m&quot; &amp; ToChar(13) &amp; &quot;3) Sistemin Belirledi&#287;i Ek Puan Mod&#252;l&#252; Hakk&#305;nda Yard&#305;m&quot;" newline="True"/>
+                                            <input variable="helpnum2"/>
+                                            <call expression="delay(200)"/>
+                                            <assign variable="loop2" expression="yard&#305;mloop2(helpnum2)"/>
+                                            <call expression="delay(200)"/>
+                                            <if expression="loop2 == 1">
+                                                <then>
+                                                    <output expression="&quot;Bu Sistem Otomatik Mod &#304;le Ayn&#305; &#199;al&#305;&#351;&#305;r. Tek fark&#305;, &#246;&#287;renci notlar&#305;n&#305; kullan&#305;c&#305; girer. Ard&#305;ndan girilen t&#252;m nolara +20 puan ekler.&quot;" newline="True"/>
+                                                </then>
+                                                <else>
+                                                    <if expression="loop2 == 2">
+                                                        <then>
+                                                            <output expression="&quot;Bu sistemde notlar, kullan&#305;c&#305; taraf&#305;ndan belirlendikten sonra program her &#246;&#287;rencinin notuna eklenecek puan i&#231;in kullan&#305;c&#305;ya tekrar soru sorar.&quot;" newline="True"/>
+                                                            <call expression="delay(7800)"/>
+                                                            <output expression="&quot;Girilen de&#287;erler test edilir, yanl&#305;&#351;lar ve uyu&#351;mazl&#305;klar d&#252;zeltilir. En sonda ise yine bir while d&#246;ng&#252;s&#252; ile t&#252;m notlar yazd&#305;r&#305;l&#305;r.&quot;" newline="True"/>
+                                                        </then>
+                                                        <else>
+                                                            <output expression="&quot;Kullan&#305;c&#305; notlar&#305; girdikten sonra dizine kaydedilir. Ard&#305;ndan puanekle() fonksiyonuna veri aktar&#305;m&#305; yap&#305;l&#305;r.&quot;" newline="True"/>
+                                                            <call expression="delay(4500)"/>
+                                                            <output expression="&quot;Fonksiyona gelen veriler &#246;nce gruplara ayr&#305;l&#305;r. Burda belirli bir not aral&#305;&#287;&#305; kullan&#305;l&#305;r.&quot;" newline="True"/>
+                                                            <call expression="delay(4500)"/>
+                                                            <output expression="&quot;Grupland&#305;r&#305;lan notlar, sistemin i&#231;inde bulunan ek puan ekleme, yani &#231;ok d&#252;&#351;&#252;k notlar&#305; bile adaletli olarak y&#252;kselten, y&#252;ksek notlar&#305; ise yerinde d&#252;zeltme yapar.&quot;" newline="True"/>
+                                                            <call expression="delay(8000)"/>
+                                                            <output expression="&quot;Yeni notlar belirlendi&#287;inde kapsaml&#305; bir &#231;&#305;kt&#305; olarak, tekrardan while d&#246;ng&#252;s&#252; ile prompt'a (ekrana) yazd&#305;r&#305;l&#305;r.&quot;" newline="True"/>
+                                                        </else>
+                                                    </if>
+                                                </else>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </then>
+                                <else>
+                                    <output expression="&quot;L&#252;tfen Sadece 'M' veya 'O' Harflerini Giriniz!&quot;" newline="True"/>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <comment text="2 Ana Se&#231;enek Alt&#305;nda Toplam 4 Farkl&#305; &#304;&#351;lem Yap&#305;l&#305;r.&#13;&#10;&#13;&#10;Otomatik: &#214;&#287;rencilerin notlar&#305; 0-80 aras&#305; rastgele se&#231;ilir. Ard&#305;ndan T&#252;m &#214;&#287;rencilere 20 puan eklenir."/>
+            <comment text="Manuel Modunda &#304;se 3 Ayr&#305; &#304;&#351;lem Yap&#305;l&#305;r. Ek Olarak &#214;&#287;rencilerin Notunu Kullan&#305;c&#305; Se&#231;er.&#13;&#10;&#13;&#10;1. &#304;&#351;lem: Se&#231;ilen Notlar&#305;n Hepine 20 Puan Ekle&#13;&#10;2. &#304;&#351;lem: Eklenecek Puanlar&#305; Kullan&#305;c&#305; Kendisi Belirler&#13;&#10;3. &#304;&#351;lem: Sistem Not A&#287;&#305;rl&#305;&#287;&#305;na G&#246;re Otomatik Bir &#350;ekilde Ekleme Yapar.&#13;&#10;&#13;&#10;3. &#304;&#351;lemdeki &#246;ncelik, d&#252;&#351;&#252;k notlara olabildi&#287;ince fazla ek puan verip, daha y&#252;ksek notlar&#305; ise en ideal &#351;ekide ayarlamakt&#305;r. Bu i&#351;lem hem zaman tasarrufu hem de, eklenen puanlar&#305;n tutarl&#305;l&#305;&#287;&#305; i&#231;in m&#252;kemmel bir y&#246;ntemdir."/>
+        </body>
+    </function>
+    <function name="delay" type="Boolean" variable="sonuc">
+        <parameters>
+            <parameter name="sn" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <comment text="Flowgorithm &#252;zerinde setTimeout veya time.sleep() gibi komutlar olmad&#305;&#287;&#305; i&#231;in gecikmeyi (delay) bu &#351;ekilde sa&#287;lar&#305;z."/>
+            <declare name="sonuc" type="Boolean" array="False" size=""/>
+            <declare name="ms" type="Integer" array="False" size=""/>
+            <assign variable="ms" expression="sn * 33"/>
+            <declare name="n" type="Integer" array="False" size=""/>
+            <assign variable="n" expression="0"/>
+            <while expression="n != ms">
+                <assign variable="n" expression="n + 1"/>
+            </while>
+            <assign variable="sonuc" expression="true"/>
+            <comment text="Response (&#231;&#305;kt&#305;) herhangi bir de&#287;er olabilir. Bunun &#246;nemi yoktur. True d&#246;nmesi, konrol eden ki&#351;i de&#287;&#351;ken ile atad&#305;&#287;&#305;nda timer kapand&#305;ktan sonra de&#287;i&#351;ken true halini al&#305;r."/>
+            <comment text="boolen test     &#13;&#10;test = delay(200)  &#13;&#10;&#231;&#305;kt&#305; test  // true"/>
+        </body>
+    </function>
+    <function name="puanekle" type="String" variable="sonuc">
+        <parameters>
+            <parameter name="puan" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="String" array="False" size=""/>
+            <declare name="ekpuan" type="Integer" array="True" size="20"/>
+            <declare name="index, index2" type="Integer" array="False" size=""/>
+            <declare name="sync" type="Boolean" array="False" size=""/>
+            <comment text="while d&#246;ng&#252;s&#252; i&#231;in"/>
+            <assign variable="sync" expression="true"/>
+            <assign variable="index" expression="0"/>
+            <if expression="puan &gt; 89">
+                <then>
+                    <assign variable="sonuc" expression="&quot;pass&quot;"/>
+                    <comment text="90 ve &#252;st&#252; notlar i&#231;in puan ekleme olmaz. "/>
+                </then>
+                <else>
+                    <if expression="puan &gt; 69">
+                        <then>
+                            <assign variable="index2" expression="5"/>
+                            <while expression="sync">
+                                <if expression="index == 6">
+                                    <then>
+                                        <assign variable="sync" expression="false"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="ekpuan[index]" expression="index2"/>
+                                        <assign variable="index" expression="index + 1"/>
+                                        <assign variable="index2" expression="index2 + 1"/>
+                                    </else>
+                                </if>
+                            </while>
+                            <assign variable="sonuc" expression="ToString(ekpuan[Random(6)])"/>
+                            <comment text="Not 70 ve 90 aras&#305;nda ise, 5 ila 10 aras&#305;nda puan ekle."/>
+                        </then>
+                        <else>
+                            <if expression="puan &gt; 49">
+                                <then>
+                                    <assign variable="index2" expression="10"/>
+                                    <while expression="sync">
+                                        <if expression="index == 9">
+                                            <then>
+                                                <assign variable="sync" expression="false"/>
+                                            </then>
+                                            <else>
+                                                <assign variable="ekpuan[index]" expression="index2"/>
+                                                <assign variable="index" expression="index + 1"/>
+                                                <assign variable="index2" expression="index2 + 1"/>
+                                            </else>
+                                        </if>
+                                    </while>
+                                    <assign variable="sonuc" expression="ToString(ekpuan[Random(9)])"/>
+                                    <comment text="Not 50 ve 70 aras&#305;nda ise, 10 ila 18 aras&#305;nda puan ekle."/>
+                                </then>
+                                <else>
+                                    <if expression="puan &gt; 29">
+                                        <then>
+                                            <assign variable="index2" expression="20"/>
+                                            <while expression="sync">
+                                                <if expression="index == 10">
+                                                    <then>
+                                                        <assign variable="sync" expression="false"/>
+                                                    </then>
+                                                    <else>
+                                                        <assign variable="ekpuan[index]" expression="index2"/>
+                                                        <assign variable="index" expression="index + 1"/>
+                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                    </else>
+                                                </if>
+                                            </while>
+                                            <assign variable="sonuc" expression="ToString(ekpuan[Random(10)])"/>
+                                            <comment text="Not 30 ve 50 aras&#305;nda ise, 20 ila 29 aras&#305;nda puan ekle."/>
+                                        </then>
+                                        <else>
+                                            <assign variable="index2" expression="30"/>
+                                            <while expression="sync">
+                                                <if expression="index == 11">
+                                                    <then>
+                                                        <assign variable="sync" expression="false"/>
+                                                    </then>
+                                                    <else>
+                                                        <assign variable="ekpuan[index]" expression="index2"/>
+                                                        <assign variable="index" expression="index + 1"/>
+                                                        <assign variable="index2" expression="index2 + 1"/>
+                                                    </else>
+                                                </if>
+                                            </while>
+                                            <assign variable="sonuc" expression="ToString(ekpuan[Random(11)])"/>
+                                            <comment text="Not 30'dan k&#252;&#231;&#252;k ise, 30 ila 40 aras&#305;nda puan ekle."/>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <comment text="String olarak yan&#305;t almak herzaman daha mant&#305;kl&#305;d&#305;r. String veri tipi hem real hem de int'e (tamsay&#305;) &#231;evrilebilir.Real say&#305;lar int olarak ta atanabilir.  Fakat Flowgoritm buna izin vermez. &#304;&#351;te birka&#231; &#246;rnek:"/>
+            <comment text="var say&#305; = 0.65   // Javascript      &#13;&#10;say&#305; = 0.65          // Python   &#13;&#10;local say&#305; = 0.65          // Lua      &#13;&#10;int say&#305; = 0.65     // C"/>
+        </body>
+    </function>
+    <function name="puaneklesoru" type="Integer" variable="sonuc">
+        <parameters>
+            <parameter name="no" type="String" array="False"/>
+            <parameter name="eskinot" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="Integer" array="False" size=""/>
+            <output expression="no &amp; &quot;. &#214;&#287;renci &#304;&#231;in Ka&#231; Puan Eklemek &#304;stersiniz: &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;&#214;&#287;rencinin Puan&#305;: &quot; &amp; eskinot" newline="True"/>
+            <input variable="sonuc"/>
+        </body>
+    </function>
+    <function name="yard&#305;mloop" type="Integer" variable="sonuc">
+        <parameters>
+            <parameter name="say&#305;" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="Integer" array="False" size=""/>
+            <if expression="say&#305; == 1 or say&#305; == 2">
+                <then/>
+                <else>
+                    <output expression="&quot;Yanl&#305;&#351; De&#287;er Girdiniz! Sadece 1 veya 2 yaz&#305;n.&quot; &amp; ToChar(13) &amp; &quot;Yeniden Ba&#351;lat&#305;l&#305;yor..&quot;" newline="True"/>
+                    <call expression="delay(1000)"/>
+                    <output expression="&quot;1) Otomatik Mod Hakk&#305;nda Yard&#305;m&quot; &amp; ToChar(13) &amp; &quot;2) Manuel Mod Hakk&#305;nda Yard&#305;m&quot;" newline="True"/>
+                    <input variable="say&#305;"/>
+                    <call expression="yard&#305;mloop(say&#305;)"/>
+                </else>
+            </if>
+            <comment text="Yard&#305;m Mod&#252;l&#252; &#304;&#231;in&#13;&#10;Yanl&#305;&#351; de&#287;er girildi&#287;inde ba&#351;tan ba&#351;lat&#305;r"/>
+            <assign variable="sonuc" expression="say&#305;"/>
+        </body>
+    </function>
+    <function name="yard&#305;mloop2" type="Integer" variable="sonuc">
+        <parameters>
+            <parameter name="say&#305;" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="Integer" array="False" size=""/>
+            <if expression="say&#305; == 1 or say&#305; == 2 or say&#305; == 3">
+                <then/>
+                <else>
+                    <output expression="&quot;Yanl&#305;&#351; De&#287;er Girdiniz! Sadece 1, 2 veya 3 yaz&#305;n.&quot; &amp; ToChar(13) &amp; &quot;Yeniden Ba&#351;lat&#305;l&#305;yor..&quot;" newline="True"/>
+                    <call expression="delay(1000)"/>
+                    <output expression="&quot;1) T&#252;m Notlara 20 Puan Ekleme Hakk&#305;nda Yard&#305;m&quot; &amp; ToChar(13) &amp; &quot;2) Manuel Puan Ekleme Hakk&#305;nda Yard&#305;m&quot; &amp; ToChar(13) &amp; &quot;3) Sistemin Belirledi&#287;i Ek Puan Mod&#252;l&#252; Hakk&#305;nda Yard&#305;m&quot;" newline="True"/>
+                    <input variable="say&#305;"/>
+                    <call expression="yard&#305;mloop2(say&#305;)"/>
+                </else>
+            </if>
+            <assign variable="sonuc" expression="say&#305;"/>
+        </body>
+    </function>
+</flowgorithm>

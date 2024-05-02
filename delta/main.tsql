@@ -1,0 +1,138 @@
+﻿DECLARE @InputCursor CURSOR GLOBAL;
+
+CREATE PROCEDURE Main()
+BEGIN
+    EXECUTE InitInput;
+
+    DECLARE @Fsayı TABLE (Index INT, Element FLOAT)
+    
+    -- Dizi Kullanımı String Methoda Göre Daha Hızlıdır.
+    -- // var fsayı = new Array()
+    DECLARE @İslem VARCHAR;
+    
+    EXECUTE Output '''a'' Sayısının Değerini Girin: ';
+    DELETE FROM @Fsayı WHERE Index = 0;
+    INSERT INTO @Fsayı (Index, Element) VALUES (0, Input());
+    EXECUTE Output '''b'' Sayısının Değerini Girin: ';
+    DELETE FROM @Fsayı WHERE Index = 1;
+    INSERT INTO @Fsayı (Index, Element) VALUES (1, Input());
+    EXECUTE Output '''c'' Sayısının Değerini Girin: ';
+    DELETE FROM @Fsayı WHERE Index = 2;
+    INSERT INTO @Fsayı (Index, Element) VALUES (2, Input());
+    DELETE FROM @Fsayı WHERE Index = 3;
+    INSERT INTO @Fsayı (Index, Element) VALUES (3, Formül((SELECT Value FROM @Fsayı WHERE Index = 0), (SELECT Value FROM @Fsayı WHERE Index = 1), (SELECT Value FROM @Fsayı WHERE Index = 2)));
+    
+    -- Delta Formülü
+    -- // formül(a = reel, b = ree, c = ree)
+    EXECUTE Output 'Program İşleyişini Görmek İster misiniz? (Y yada N): ';
+    SET @İslem = Input();
+    IF (@İslem = 'y' OR @İslem = 'Y')
+    BEGIN
+        
+        -- "Görünür İşlemler"
+        IF (Fonksiyon((SELECT Value FROM @Fsayı WHERE Index = 3), (SELECT Value FROM @Fsayı WHERE Index = 0), (SELECT Value FROM @Fsayı WHERE Index = 1)) = 'pass')
+        BEGIN
+            
+            -- 2 kök içeren sonuçlar buraya yazılır.
+            -- Flowgorithm fonksiyon dönüşlerinde array(dizi) desteklemediği için formülü elle uygulamamız gerekir.
+            -- Sonuç için Gerekli Formül
+            -- 
+            -- // fonksiyon(delta = reel, a = reel, b = reel)
+            -- // return str
+            EXECUTE Output 'Kök 1: ' + (-(SELECT Value FROM @Fsayı WHERE Index = 1) + SQRT((SELECT Value FROM @Fsayı WHERE Index = 3))) / (2 * (SELECT Value FROM @Fsayı WHERE Index = 0));
+            EXECUTE Output 'Kök 2: ' + (-(SELECT Value FROM @Fsayı WHERE Index = 1) - SQRT((SELECT Value FROM @Fsayı WHERE Index = 3))) / (2 * (SELECT Value FROM @Fsayı WHERE Index = 0));
+            
+            -- Kök formülleri yazıldı.
+            EXECUTE Output 'Formüller: ' + CHAR(13) + CHAR(13) + 'Delta Hesabı' + CHAR(13) + 'Delta = ' + CAST((SELECT Value FROM @Fsayı WHERE Index = 1) AS VARCHAR) + '^2-4*' + CAST((SELECT Value FROM @Fsayı WHERE Index = 0) AS VARCHAR) + '*' + CAST((SELECT Value FROM @Fsayı WHERE Index = 2) AS VARCHAR) + CHAR(13) + CHAR(13) + '====================' + CHAR(13) + CHAR(13) + 'X1 İçin:' + CHAR(13) + '(-' + CAST((SELECT Value FROM @Fsayı WHERE Index = 1) AS VARCHAR) + '+(' + CAST((SELECT Value FROM @Fsayı WHERE Index = 3) AS VARCHAR) + '^(1/2))) / (2*' + CAST((SELECT Value FROM @Fsayı WHERE Index = 0) AS VARCHAR) + ')' + CHAR(13) + CHAR(13) + 'X2 İçin:' + CHAR(13) + '(-' + CAST((SELECT Value FROM @Fsayı WHERE Index = 1) AS VARCHAR) + '-(' + CAST((SELECT Value FROM @Fsayı WHERE Index = 3) AS VARCHAR) + '^(1/2))) / (2*' + CAST((SELECT Value FROM @Fsayı WHERE Index = 0) AS VARCHAR) + ')';
+        END
+        ELSE
+        BEGIN
+            DECLARE @Text VARCHAR;
+            
+            SET @Text = Fonksiyon((SELECT Value FROM @Fsayı WHERE Index = 3), (SELECT Value FROM @Fsayı WHERE Index = 0), (SELECT Value FROM @Fsayı WHERE Index = 1));
+            
+            -- İkincil bir fonksiyon ata.
+            -- İlk işlem sonuç verirse buraya dön.
+            IF (@Text = 'Kök Bulunamadı')
+            BEGIN
+                EXECUTE Output @Text + CHAR(13) + CHAR(13) + 'Delta 0''a eşittir. Bu yüzden kök yoktur.';
+            END
+            ELSE
+            BEGIN
+                EXECUTE Output @Text + CHAR(13) + CHAR(13) + 'Formül = -' + CAST((SELECT Value FROM @Fsayı WHERE Index = 1) AS VARCHAR) + '/ 2*' + CAST((SELECT Value FROM @Fsayı WHERE Index = 0) AS VARCHAR);
+            END
+        END
+    END
+    ELSE
+    BEGIN
+        
+        -- "Kapalı İşlemler"
+        IF (Fonksiyon((SELECT Value FROM @Fsayı WHERE Index = 3), (SELECT Value FROM @Fsayı WHERE Index = 0), (SELECT Value FROM @Fsayı WHERE Index = 1)) = 'pass')
+        BEGIN
+            EXECUTE Output 'Kök 1: ' + (-(SELECT Value FROM @Fsayı WHERE Index = 1) + SQRT((SELECT Value FROM @Fsayı WHERE Index = 3))) / (2 * (SELECT Value FROM @Fsayı WHERE Index = 0));
+            EXECUTE Output 'Kök 2: ' + (-(SELECT Value FROM @Fsayı WHERE Index = 1) - SQRT((SELECT Value FROM @Fsayı WHERE Index = 3))) / (2 * (SELECT Value FROM @Fsayı WHERE Index = 0));
+        END
+        ELSE
+        BEGIN
+            EXECUTE Output Fonksiyon((SELECT Value FROM @Fsayı WHERE Index = 3), (SELECT Value FROM @Fsayı WHERE Index = 0), (SELECT Value FROM @Fsayı WHERE Index = 1));
+        END
+    END
+    
+    -- Programı Kapat. (return True)
+END;
+
+CREATE FUNCTION Fonksiyon (FLOAT Deger, FLOAT a, FLOAT b)
+RETURNS VARCHAR
+BEGIN
+    DECLARE @Sonuc VARCHAR;
+    
+    IF (@Deger < 0)
+    BEGIN
+        SET @Sonuc = 'Kök Bulunamadı';
+    END
+    ELSE
+    BEGIN
+        IF (@Deger = 0)
+        BEGIN
+            SET @Sonuc = '1. ve 2. Kökler Eşittir. Sonuç: ' + CAST((-@b) / 2 * @a AS VARCHAR);
+        END
+        ELSE
+        BEGIN
+            SET @Sonuc = 'pass';
+        END
+    END
+    
+    RETURN Sonuc;
+END;
+
+CREATE FUNCTION Formül (INT a, INT b, INT c)
+RETURNS FLOAT
+BEGIN
+    DECLARE @Sonuc FLOAT;
+    
+    SET @Sonuc = @b * @b - 4 * @a * @c;
+    
+    RETURN Sonuc;
+END;
+
+-- The Input Table (Value VARCHAR) contains the "input" to this program.
+-- You can change where and how data is acquired by modifying the code below.
+CREATE PROCEDURE InitInput()
+BEGIN
+    SET @InputCursor = CURSOR FOR
+    SELECT Value FROM Input;
+END;
+
+CREATE FUNCTION Input()
+RETURNS VARCHAR
+BEGIN
+    DECLARE Result VARCHAR;
+    FETCH NEXT FROM @InputCursor INTO @Result;
+    RETURN(@Result);
+END;
+
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;

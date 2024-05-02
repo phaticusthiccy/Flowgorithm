@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="CASPER"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2022-03-25 03:54:24 &#214;S"/>
+        <attribute name="created" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wMy0yNTswMzoxODo0OCDDllM7MjQxMQ=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wMy0yNTswMzo1NDoyNCDDllM7MTsyNTEz"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="kilo" type="Integer" array="False" size=""/>
+            <declare name="boy" type="Real" array="False" size=""/>
+            <output expression="&quot;L&#252;tfen Kilonuzu Giriniz: &#13;&#10;(Ex: 69)&#13;&#10;&quot;" newline="True"/>
+            <input variable="kilo"/>
+            <call expression="delay(1)"/>
+            <output expression="&quot;L&#252;tfen Boyunuzu Giriniz: &#13;&#10;(Ex: 1.85)&#13;&#10;&quot;" newline="True"/>
+            <input variable="boy"/>
+            <declare name="tab" type="String" array="False" size=""/>
+            <declare name="c&#252;mle" type="String" array="False" size=""/>
+            <assign variable="c&#252;mle" expression="&quot;VKI Tablosunda &quot;"/>
+            <if expression="vki(kilo, boy) == &quot;zay&#305;f&quot;">
+                <then>
+                    <assign variable="tab" expression="c&#252;mle &amp; &quot;'Zay&#305;f' B&#246;l&#252;m&#252;ndesin&quot;"/>
+                </then>
+                <else>
+                    <if expression="vki(kilo, boy) == &quot;normal&quot;">
+                        <then>
+                            <assign variable="tab" expression="c&#252;mle &amp; &quot;'Normal' B&#246;l&#252;mdesin&quot;"/>
+                        </then>
+                        <else>
+                            <if expression="vki(kilo, boy) == &quot;kilolu&quot;">
+                                <then>
+                                    <assign variable="tab" expression="c&#252;mle &amp; &quot;'Fazla Kilolu' B&#246;l&#252;mdesin&quot;"/>
+                                </then>
+                                <else>
+                                    <if expression="vki(kilo, boy) == &quot;1. obez&quot;">
+                                        <then>
+                                            <assign variable="tab" expression="c&#252;mle &amp; &quot;'1. Obez' B&#246;l&#252;m&#252;ndesin&quot;"/>
+                                        </then>
+                                        <else>
+                                            <if expression="vki(kilo, boy) == &quot;2. obez&quot;">
+                                                <then>
+                                                    <assign variable="tab" expression="c&#252;mle &amp; &quot;'2. Obez' B&#246;l&#252;m&#252;ndesin&quot;"/>
+                                                </then>
+                                                <else>
+                                                    <if expression="vki(kilo, boy) == &quot;3. obez&quot;">
+                                                        <then>
+                                                            <assign variable="tab" expression="c&#252;mle &amp; &quot;'3. Obez' B&#246;l&#252;m&#252;ndesin&quot;"/>
+                                                        </then>
+                                                        <else/>
+                                                    </if>
+                                                </else>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <output expression="tab" newline="True"/>
+        </body>
+    </function>
+    <function name="delay" type="Boolean" variable="sonuc">
+        <parameters>
+            <parameter name="sn" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="Boolean" array="False" size=""/>
+            <declare name="ms" type="Integer" array="False" size=""/>
+            <assign variable="ms" expression="sn * 33333"/>
+            <declare name="n" type="Integer" array="False" size=""/>
+            <assign variable="n" expression="0"/>
+            <while expression="n != ms">
+                <assign variable="n" expression="n + 1"/>
+            </while>
+            <assign variable="sonuc" expression="true"/>
+        </body>
+    </function>
+    <function name="vki" type="String" variable="sonuc">
+        <parameters>
+            <parameter name="kilo" type="Integer" array="False"/>
+            <parameter name="boy" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="String" array="False" size=""/>
+            <declare name="index" type="Integer" array="False" size=""/>
+            <assign variable="index" expression="kilo / (boy * boy)"/>
+            <if expression="index &lt; 18">
+                <then>
+                    <assign variable="sonuc" expression="&quot;zay&#305;f&quot;"/>
+                </then>
+                <else>
+                    <if expression="index &lt; 25">
+                        <then>
+                            <assign variable="sonuc" expression="&quot;normal&quot;"/>
+                        </then>
+                        <else>
+                            <if expression="index &lt; 30">
+                                <then>
+                                    <assign variable="sonuc" expression="&quot;kilolu&quot;"/>
+                                </then>
+                                <else>
+                                    <if expression="index &lt; 35">
+                                        <then>
+                                            <assign variable="sonuc" expression="&quot;1. obez&quot;"/>
+                                        </then>
+                                        <else>
+                                            <if expression="index &lt; 40">
+                                                <then>
+                                                    <assign variable="sonuc" expression="&quot;2. obez&quot;"/>
+                                                </then>
+                                                <else>
+                                                    <assign variable="sonuc" expression="&quot;3. obez&quot;"/>
+                                                </else>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+</flowgorithm>

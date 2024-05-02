@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="CASPER"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2022-04-15 06:08:35 &#214;S"/>
+        <attribute name="created" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0xNTswNTowNTo0NiDDllM7MjQwNw=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0xNTswNjowODozNSDDllM7MTsyNTE3"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="fsay&#305;" type="Real" array="True" size="7"/>
+            <comment text="Dizi Kullan&#305;m&#305; String Methoda G&#246;re Daha H&#305;zl&#305;d&#305;r. &#13;&#10;// var fsay&#305; = new Array()"/>
+            <declare name="islem" type="String" array="False" size=""/>
+            <output expression="&quot;'a' Say&#305;s&#305;n&#305;n De&#287;erini Girin: &quot;" newline="True"/>
+            <input variable="fsay&#305;[0]"/>
+            <output expression="&quot;'b' Say&#305;s&#305;n&#305;n De&#287;erini Girin: &quot;" newline="True"/>
+            <input variable="fsay&#305;[1]"/>
+            <output expression="&quot;'c' Say&#305;s&#305;n&#305;n De&#287;erini Girin: &quot;" newline="True"/>
+            <input variable="fsay&#305;[2]"/>
+            <assign variable="fsay&#305;[3]" expression="form&#252;l(fsay&#305;[0], fsay&#305;[1], fsay&#305;[2])"/>
+            <comment text="Delta Form&#252;l&#252;&#13;&#10;// form&#252;l(a = reel, b = ree, c = ree)"/>
+            <output expression="&quot;Program &#304;&#351;leyi&#351;ini G&#246;rmek &#304;ster misiniz? (Y yada N): &quot;" newline="True"/>
+            <input variable="islem"/>
+            <if expression="islem == &quot;y&quot; || islem == &quot;Y&quot;">
+                <then>
+                    <comment text="&quot;G&#246;r&#252;n&#252;r &#304;&#351;lemler&quot;"/>
+                    <if expression="fonksiyon(fsay&#305;[3],fsay&#305;[0],fsay&#305;[1]) == &quot;pass&quot;">
+                        <then>
+                            <comment text="2 k&#246;k i&#231;eren sonu&#231;lar buraya yaz&#305;l&#305;r.&#13;&#10;Flowgorithm fonksiyon d&#246;n&#252;&#351;lerinde array(dizi) desteklemedi&#287;i i&#231;in form&#252;l&#252; elle uygulamam&#305;z gerekir."/>
+                            <comment text="Sonu&#231; i&#231;in Gerekli Form&#252;l&#13;&#10;&#13;&#10;// fonksiyon(delta = reel, a = reel, b = reel)&#13;&#10;// return str "/>
+                            <output expression="&quot;K&#246;k 1: &quot; &amp; (-fsay&#305;[1] + (Sqrt(fsay&#305;[3]))) / (2 * fsay&#305;[0])" newline="True"/>
+                            <output expression="&quot;K&#246;k 2: &quot; &amp; (-fsay&#305;[1] - (Sqrt(fsay&#305;[3]))) / (2 * fsay&#305;[0])" newline="True"/>
+                            <comment text="K&#246;k form&#252;lleri yaz&#305;ld&#305;."/>
+                            <output expression="&quot;Form&#252;ller: &quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Delta Hesab&#305;&quot; &amp; ToChar(13) &amp; &quot;Delta = &quot; &amp; ToString(fsay&#305;[1]) &amp; &quot;^2-4*&quot; &amp; ToString(fsay&#305;[0]) &amp; &quot;*&quot; &amp; ToString(fsay&#305;[2]) &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;====================&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;X1 &#304;&#231;in:&quot; &amp; ToChar(13) &amp; &quot;(-&quot; &amp; ToString(fsay&#305;[1]) &amp; &quot;+(&quot; &amp; ToString(fsay&#305;[3]) &amp; &quot;^(1/2))) / (2*&quot; &amp; ToString(fsay&#305;[0]) &amp; &quot;)&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;X2 &#304;&#231;in:&quot; &amp; ToChar(13) &amp; &quot;(-&quot; &amp; ToString(fsay&#305;[1]) &amp; &quot;-(&quot; &amp; ToString(fsay&#305;[3]) &amp; &quot;^(1/2))) / (2*&quot; &amp; ToString(fsay&#305;[0]) &amp; &quot;)&quot;" newline="True"/>
+                        </then>
+                        <else>
+                            <declare name="text" type="String" array="False" size=""/>
+                            <assign variable="text" expression="fonksiyon(fsay&#305;[3],fsay&#305;[0],fsay&#305;[1])"/>
+                            <comment text="&#304;kincil bir fonksiyon ata. &#13;&#10;&#304;lk i&#351;lem sonu&#231; verirse buraya d&#246;n."/>
+                            <if expression="text == &quot;K&#246;k Bulunamad&#305;&quot;">
+                                <then>
+                                    <output expression="text &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Delta 0'a e&#351;ittir. Bu y&#252;zden k&#246;k yoktur.&quot;" newline="True"/>
+                                </then>
+                                <else>
+                                    <output expression="text &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Form&#252;l = -&quot; &amp; ToString(fsay&#305;[1]) &amp; &quot;/ 2*&quot; &amp; ToString(fsay&#305;[0])" newline="True"/>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </then>
+                <else>
+                    <comment text="&quot;Kapal&#305; &#304;&#351;lemler&quot;"/>
+                    <if expression="fonksiyon(fsay&#305;[3],fsay&#305;[0],fsay&#305;[1]) == &quot;pass&quot;">
+                        <then>
+                            <output expression="&quot;K&#246;k 1: &quot; &amp; (-fsay&#305;[1] + (Sqrt(fsay&#305;[3]))) / (2 * fsay&#305;[0])" newline="True"/>
+                            <output expression="&quot;K&#246;k 2: &quot; &amp; (-fsay&#305;[1] - (Sqrt(fsay&#305;[3]))) / (2 * fsay&#305;[0])" newline="True"/>
+                        </then>
+                        <else>
+                            <output expression="fonksiyon(fsay&#305;[3],fsay&#305;[0],fsay&#305;[1])" newline="True"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <comment text="Program&#305; Kapat. (return True)"/>
+        </body>
+    </function>
+    <function name="fonksiyon" type="String" variable="sonuc">
+        <parameters>
+            <parameter name="deger" type="Real" array="False"/>
+            <parameter name="a" type="Real" array="False"/>
+            <parameter name="b" type="Real" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="String" array="False" size=""/>
+            <if expression="deger &lt; 0">
+                <then>
+                    <assign variable="sonuc" expression="&quot;K&#246;k Bulunamad&#305;&quot;"/>
+                </then>
+                <else>
+                    <if expression="deger == 0">
+                        <then>
+                            <assign variable="sonuc" expression="&quot;1. ve 2. K&#246;kler E&#351;ittir. Sonu&#231;: &quot; &amp; ToString(-b / 2*a)"/>
+                        </then>
+                        <else>
+                            <assign variable="sonuc" expression="&quot;pass&quot;"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="form&#252;l" type="Real" variable="sonuc">
+        <parameters>
+            <parameter name="a" type="Integer" array="False"/>
+            <parameter name="b" type="Integer" array="False"/>
+            <parameter name="c" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="Real" array="False" size=""/>
+            <assign variable="sonuc" expression="(b*b) - 4*a*c"/>
+        </body>
+    </function>
+</flowgorithm>

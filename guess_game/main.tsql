@@ -1,0 +1,754 @@
+﻿DECLARE @InputCursor CURSOR GLOBAL;
+
+CREATE PROCEDURE Main()
+BEGIN
+    EXECUTE InitInput;
+
+    DECLARE @Sync BIT;
+    DECLARE @Find BIT;
+    DECLARE @Name VARCHAR;
+    DECLARE @Mode INT;
+    DECLARE @Number INT;
+    
+    EXECUTE Logger 'str', Plugins('ask name', '');
+    EXECUTE Delay 2;
+    SET @Name = Input();
+    EXECUTE Namecorrection @Name;
+    EXECUTE Delay 2;
+    
+    -- İsim Alma Kısmı Tamamlandı
+    EXECUTE Logger 'str', Plugins('after name', @Name);
+    EXECUTE Delay 9;
+    EXECUTE Logger 'str', Plugins('game mode', '');
+    SET @Mode = Input();
+    
+    -- Oyun Modu Başarıyla Seçildi
+    IF (@Mode = 1 OR @Mode = 2)
+    BEGIN
+        IF (@Mode = 1)
+        BEGIN
+            
+            -- Kolay Oyun Modu
+            DECLARE @var_İndex INT;
+            DECLARE @İndex2 INT;
+            DECLARE @Think INT;
+            
+            SET @var_İndex = 0;
+            SET @İndex2 = 0;
+            SET @Sync = True;
+            SET @Number = Rand(True);
+            EXECUTE Logger 'str', Plugins('get num', @Name);
+            EXECUTE Delay 2;
+            
+            -- Sayı Belirlendi
+            WHILE (@Sync)
+            BEGIN
+                IF (@var_İndex = 10)
+                BEGIN
+                    SET @Find = False;
+                    SET @Sync = False;
+                    
+                    -- 10 Hak İçinden Tahmin Edilemez ise Döngüyü Kapat
+                END
+                ELSE
+                BEGIN
+                    SET @İndex2 = @İndex2 + 1;
+                    SET @var_İndex = @var_İndex + 1;
+                    IF (@var_İndex = 1)
+                    BEGIN
+                        
+                        -- İlk başlama mesajı
+                        EXECUTE Logger 'str', Plugins('think', @Name);
+                    END
+                    ELSE
+                    BEGIN
+                        
+                        -- Sonraki başlama mesajları
+                        IF (@var_İndex = 10)
+                        BEGIN
+                            
+                            -- Son tahmin hakkı için bilgilendirme mesajı
+                            EXECUTE Logger 'str', Plugins('sthink', @Name);
+                            EXECUTE Delay 3.5;
+                        END
+                        ELSE
+                        BEGIN
+                            
+                            -- Yanlış tahminler için bilgilendirme mesajı
+                            EXECUTE Logger 'str', Plugins('wthink', @Name);
+                        END
+                    END
+                    SET @Think = Input();
+                    IF (@Think = @Number)
+                    BEGIN
+                        
+                        -- Tahmin Doğru İse `find` bool'u true olarak ayarla ve döngüyü kapat.
+                        SET @Find = True;
+                        SET @Sync = False;
+                    END
+                    ELSE
+                    BEGIN
+                        EXECUTE Delay 1;
+                        IF (@var_İndex = 10)
+                        BEGIN
+                        END
+                        ELSE
+                        BEGIN
+                            IF (@Think > @Number)
+                            BEGIN
+                                
+                                -- Tahmin edilen sayı, ana sayıdan daha büyük ise buraya dön
+                                IF (@Think - @Number > 25)
+                                BEGIN
+                                    
+                                    -- Tahmin, sayıdan uzak ise bunu gönder
+                                    EXECUTE Logger 'str', Plugins('cold', '');
+                                END
+                                ELSE
+                                BEGIN
+                                    IF (@Think - @Number > 15)
+                                    BEGIN
+                                        
+                                        -- Tahmin, sayıya biraz yakın ise bunu gönder
+                                        EXECUTE Logger 'str', Plugins('warm', '');
+                                    END
+                                    ELSE
+                                    BEGIN
+                                        
+                                        -- Tahmin, sayıya çok yakın ise bunu gönder
+                                        EXECUTE Logger 'str', Plugins('hot', '');
+                                    END
+                                END
+                            END
+                            ELSE
+                            BEGIN
+                                
+                                -- Tahmin edilen sayı, ana sayıdan daha küçük ise buraya dön
+                                IF (@Number - @Think > 25)
+                                BEGIN
+                                    
+                                    -- Tahmin, sayıdan uzak ise bunu gönder
+                                    EXECUTE Logger 'str', Plugins('cold', '');
+                                END
+                                ELSE
+                                BEGIN
+                                    IF (@Number - @Think > 15)
+                                    BEGIN
+                                        
+                                        -- Tahmin, sayıya biraz yakın ise bunu gönder
+                                        EXECUTE Logger 'str', Plugins('warm', '');
+                                    END
+                                    ELSE
+                                    BEGIN
+                                        
+                                        -- Tahmin, sayıya çok yakın ise bunu gönder
+                                        EXECUTE Logger 'str', Plugins('hot', '');
+                                    END
+                                END
+                            END
+                        END
+                    END
+                END
+            END
+            IF (@Find)
+            BEGIN
+                
+                -- Oyun Kazanıldığında Buraya Dön
+                IF (@İndex2 < 4)
+                BEGIN
+                    
+                    -- Sayı hemen tahmin edilirse ek mesaj gönder
+                    EXECUTE Logger 'str', Plugins('swin', @Name);
+                    EXECUTE Delay 1;
+                    EXECUTE Logger 'str', Plugins('win', @Name);
+                    EXECUTE Delay 2;
+                    EXECUTE Logger 'str', CAST(@İndex2 AS VARCHAR) + '. Denemede Oyunu Kazandınız!';
+                END
+                ELSE
+                BEGIN
+                    
+                    -- Klasik tebrik mesajı
+                    EXECUTE Logger 'str', Plugins('win', @Name);
+                    EXECUTE Delay 2;
+                    EXECUTE Logger 'str', CAST(@İndex2 AS VARCHAR) + '. Denemede Oyunu Kazandınız!';
+                END
+            END
+            ELSE
+            BEGIN
+                
+                -- Oyun Kaybedildiğinde Buraya Dön
+                EXECUTE Logger 'str', Plugins('lose', @Name);
+                EXECUTE Delay 2;
+                EXECUTE Logger 'str', 'Bir kez daha oynamak için 1 yazman yeterli.';
+                SET @Name = Input();
+                IF (@Name = '1')
+                BEGIN
+                    
+                    -- Program kapanmadan bir kez daha oynama hakkı verir.
+                    EXECUTE Main ;
+                END
+            END
+        END
+        ELSE
+        BEGIN
+            
+            -- Normal Oyun Modu
+            DECLARE @var_İndex INT;
+            DECLARE @İndex2 INT;
+            DECLARE @Think INT;
+            
+            SET @var_İndex = 0;
+            SET @İndex2 = 0;
+            SET @Sync = True;
+            SET @Number = Rand(False);
+            EXECUTE Logger 'str', Plugins('get num', @Name);
+            EXECUTE Delay 2;
+            
+            -- Sayı Belirlendi
+            WHILE (@Sync)
+            BEGIN
+                IF (@var_İndex = 10)
+                BEGIN
+                    SET @Find = False;
+                    SET @Sync = False;
+                    
+                    -- 10 Hak İçinden Tahmin Edilemez ise Döngüyü Kapat
+                END
+                ELSE
+                BEGIN
+                    SET @İndex2 = @İndex2 + 1;
+                    SET @var_İndex = @var_İndex + 1;
+                    IF (@var_İndex = 1)
+                    BEGIN
+                        
+                        -- İlk başlama mesajı
+                        EXECUTE Logger 'str', Plugins('think', @Name);
+                    END
+                    ELSE
+                    BEGIN
+                        
+                        -- Sonraki başlama mesajları
+                        IF (@var_İndex = 10)
+                        BEGIN
+                            
+                            -- Son tahmin hakkı için bilgilendirme mesajı
+                            EXECUTE Logger 'str', Plugins('sthink', @Name);
+                            EXECUTE Delay 3.5;
+                        END
+                        ELSE
+                        BEGIN
+                            
+                            -- Yanlış tahminler için bilgilendirme mesajı
+                            EXECUTE Logger 'str', Plugins('wthink', @Name);
+                        END
+                    END
+                    SET @Think = Input();
+                    IF (@Think = @Number)
+                    BEGIN
+                        
+                        -- Tahmin Doğru İse `find` bool'u true olarak ayarla ve döngüyü kapat.
+                        SET @Find = True;
+                        SET @Sync = False;
+                    END
+                    ELSE
+                    BEGIN
+                        
+                        -- Tahmin Yanlış İse Döngüyü Yeniden Başlat
+                    END
+                END
+            END
+            IF (@Find)
+            BEGIN
+                
+                -- Oyun Kazanıldığında Buraya Dön
+                IF (@İndex2 < 4)
+                BEGIN
+                    
+                    -- Sayı hemen tahmin edilirse ek mesaj gönder
+                    EXECUTE Logger 'str', Plugins('swin', @Name);
+                    EXECUTE Delay 1;
+                    EXECUTE Logger 'str', Plugins('win', @Name);
+                    EXECUTE Delay 2;
+                    EXECUTE Logger 'str', CAST(@İndex2 AS VARCHAR) + '. Denemede Oyunu Kazandınız!';
+                END
+                ELSE
+                BEGIN
+                    
+                    -- Klasik tebrik mesajı
+                    EXECUTE Logger 'str', Plugins('win', @Name);
+                    EXECUTE Delay 2;
+                    EXECUTE Logger 'str', CAST(@İndex2 AS VARCHAR) + '. Denemede Oyunu Kazandınız!';
+                END
+            END
+            ELSE
+            BEGIN
+                
+                -- Oyun Kaybedildiğinde Buraya Dön
+                EXECUTE Logger 'str', Plugins('lose', @Name);
+                EXECUTE Delay 2;
+                EXECUTE Logger 'str', 'Bir kez daha oynamak için 1 yazman yeterli.';
+                SET @Name = Input();
+                IF (@Name = '1')
+                BEGIN
+                    
+                    -- Program kapanmadan bir kez daha oynama hakkı verir.
+                    EXECUTE Main ;
+                END
+            END
+        END
+    END
+    ELSE
+    BEGIN
+        IF (@Mode = 3)
+        BEGIN
+            
+            -- Bilgilendirme Mesajı
+            SET @Number = 0;
+            WHILE (1=1)
+            BEGIN
+                EXECUTE Logger 'str', Plugins('info', CAST(@Number AS VARCHAR));
+                EXECUTE Delay 4;
+                SET @Number = @Number + 1;
+                IF (NOT @Number != 10) BREAK;
+            END
+            
+            -- do Dögüsü kullanmak en iyi seçenek olacaktır
+        END
+        ELSE
+        BEGIN
+            EXECUTE Logger 'str', Plugins('wmode', '');
+        END
+    END
+END;
+
+CREATE FUNCTION Delay (FLOAT Sn)
+RETURNS BIT
+BEGIN
+    -- Delay (bekleme süresi) için gerekli fonskiyon. Flowgorithm;
+    -- setTimeout()
+    -- time.sleep()
+    -- gibi fonksiyon barındırmadığı için, gecikmeyi while döngüsü ile yaparız.
+    DECLARE @Payload BIT;
+    DECLARE @Ms FLOAT;
+    
+    SET @Ms = @Sn * 30000;
+    
+    -- 1 Saniye ≊ 30.000 Sayım
+    -- 1 Sayım = 3,14e-5
+    DECLARE @n INT;
+    
+    SET @n = 0;
+    WHILE (@n < @Ms)
+    BEGIN
+        SET @n = @n + 1;
+    END
+    SET @Payload = True;
+    
+    RETURN Payload;
+END;
+
+CREATE FUNCTION func_Exit ()
+RETURNS BIT
+BEGIN
+    -- Bu fonksiyon herhangi bir hatada veya istenmeyen değerlerde programın çalışmasını engeller.
+    -- Bu fonskiyon hiçbir şekilde pas geçilemez.
+    -- Fonksiyon bir kez çalışırsa durdurmak imkansızdır.
+    WHILE (1=1)
+    BEGIN
+        IF (NOT True) BREAK;
+    END
+    
+    RETURN ex;
+END;
+
+CREATE FUNCTION Logger (VARCHAR Type, VARCHAR This)
+RETURNS BIT
+BEGIN
+    DECLARE @Payload BIT;
+    
+    -- Çıktı kullanmak yerine daha efektik bir şekilde logger fonksiyonunu kullanalım.
+    -- 
+    -- Çıktılarda oluşan karmaşa ve syntx hataları logger içerisinde otomatik düzeltilir.
+    IF (@Type = 'int')
+    BEGIN
+        EXECUTE Output CAST(@This AS INT);
+        SET @Payload = True;
+    END
+    ELSE
+    BEGIN
+        IF (@Type = 'str')
+        BEGIN
+            EXECUTE Output CAST(@This AS VARCHAR);
+            SET @Payload = True;
+        END
+        ELSE
+        BEGIN
+            IF (@Type = 'bool')
+            BEGIN
+                SET @Payload = @This;
+            END
+            ELSE
+            BEGIN
+                
+                -- Flowgorithm Array ve Object (dizin ve obje) dönüşleri desteklemez. Logger (çıktı kontrol edicisi) sadece sayı, harf veya doğru-yanlış dönüşü yapabilir.
+                -- Program durdurulur.
+                -- process.exit()
+                EXECUTE func_Exit ;
+            END
+        END
+    END
+    
+    -- logger("str", "test")  =>  String İçin
+    -- logger("int", "190")  =>  Sayı İçin
+    -- logger("bool", true)  => true-false için
+    
+    RETURN Payload;
+END;
+
+CREATE FUNCTION Namecorrection (VARCHAR Name)
+RETURNS BIT
+BEGIN
+    DECLARE @Payload BIT;
+    
+    IF (LEN(@Name) < 3)
+    BEGIN
+        EXECUTE Logger 'str', 'İsminiz 3 kelimeden kısa olmamalı.' + CHAR(13) + 'Lütfen programı baştan başlatın.';
+        EXECUTE func_Exit ;
+    END
+    ELSE
+    BEGIN
+        SET @Payload = True;
+    END
+    
+    -- Sistemin istediği isim 3 kelimeden kısa olursa oyun başlayamaz.
+    
+    RETURN Payload;
+END;
+
+CREATE FUNCTION Plugins (VARCHAR Type, VARCHAR Arg)
+RETURNS VARCHAR
+BEGIN
+    -- Program içindeki çeşitlilik için gerekli fonksiyon.
+    -- Fonksiyon karmaşası olmaması için kısaltıldı.
+    DECLARE @Payload VARCHAR;
+    DECLARE @Str TABLE (Index INT, Element VARCHAR)
+    
+    IF (@Type = 'ask name')
+    BEGIN
+        DELETE FROM @Str WHERE Index = 0;
+        INSERT INTO @Str (Index, Element) VALUES (0, 'Oyuna Hoşgeldin Yabancı!' + CHAR(13) + 'Lütfen Adını Gir:');
+        DELETE FROM @Str WHERE Index = 1;
+        INSERT INTO @Str (Index, Element) VALUES (1, 'Hey, Merhaba Yabacı :)' + CHAR(13) + 'Lütfen İsmini Yazar mısın?');
+        DELETE FROM @Str WHERE Index = 2;
+        INSERT INTO @Str (Index, Element) VALUES (2, 'Yeni bir oyuncu. Yaşasınn!' + CHAR(13) + 'Adını söylermisin lütfen..');
+        DELETE FROM @Str WHERE Index = 3;
+        INSERT INTO @Str (Index, Element) VALUES (3, 'Oyunda Yeni Bir Katılımcı Var!' + CHAR(13) + 'Lütfen İsmini Gir:');
+        DELETE FROM @Str WHERE Index = 4;
+        INSERT INTO @Str (Index, Element) VALUES (4, 'İşte yeni bir oyuncu daha!' + CHAR(13) + 'Sana nasıl hitap etmemi istersin?');
+        DELETE FROM @Str WHERE Index = 5;
+        INSERT INTO @Str (Index, Element) VALUES (5, 'Seni daha önce buralarda görmedim..' + CHAR(13) + 'Oyuna başlaman için ismine ihtiyacım var. Lütfen ismini söyle.');
+        DELETE FROM @Str WHERE Index = 6;
+        INSERT INTO @Str (Index, Element) VALUES (6, 'Oyuna Hoşgeldin!' + CHAR(13) + 'Birazdan aşağıdaki giriş bölümü açılacak. Lütfen oraya adını yaz.');
+        SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 7));
+    END
+    ELSE
+    BEGIN
+        IF (@Type = 'after name')
+        BEGIN
+            DELETE FROM @Str WHERE Index = 0;
+            INSERT INTO @Str (Index, Element) VALUES (0, 'Merhaba ' + @Arg + CHAR(13) + 'Oyunun kuralları şunlardır:' + CHAR(13) + '1) Sistem 0-100 arasında sayı seçer.' + CHAR(13) + '2) Sayıyı tahmin etmeye çalışırsın' + CHAR(13) + '3) Toplam 10 adet başarısız denemeden sonra oyun biter.' + CHAR(13) + '4) Sayı bulunursa oyun kazanılır!');
+            SET @Payload = (SELECT Value FROM @Str WHERE Index = 0);
+        END
+        ELSE
+        BEGIN
+            IF (@Type = 'game mode')
+            BEGIN
+                DELETE FROM @Str WHERE Index = 0;
+                INSERT INTO @Str (Index, Element) VALUES (0, 'Lütfen Oyun Modunu Seç' + CHAR(13) + CHAR(13) + '1) Kolay (Sıcak-Soğuk Mantığı)' + CHAR(13) + '2) Normal (Yönergeler Yok)' + CHAR(13) + '3) İşleyiş Hakkında Bilgi Al');
+                SET @Payload = (SELECT Value FROM @Str WHERE Index = 0);
+            END
+            ELSE
+            BEGIN
+                IF (@Type = 'wmode')
+                BEGIN
+                    DELETE FROM @Str WHERE Index = 0;
+                    INSERT INTO @Str (Index, Element) VALUES (0, 'Lütfen Sadece 1 veya 2 Yazın');
+                    DELETE FROM @Str WHERE Index = 1;
+                    INSERT INTO @Str (Index, Element) VALUES (1, 'Yanlış Seçim! Sadece 1 veya 2 yazın!');
+                    SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 2));
+                END
+                ELSE
+                BEGIN
+                    IF (@Type = 'get num')
+                    BEGIN
+                        DELETE FROM @Str WHERE Index = 0;
+                        INSERT INTO @Str (Index, Element) VALUES (0, 'Pekala, sayımı beliredim. Şimdi sıra sende! Hadi Tahmin Et! ' + @Arg);
+                        DELETE FROM @Str WHERE Index = 1;
+                        INSERT INTO @Str (Index, Element) VALUES (1, 'Tuttum! Hadi Başlayalım :)');
+                        DELETE FROM @Str WHERE Index = 2;
+                        INSERT INTO @Str (Index, Element) VALUES (2, 'Sayıyı Belleğime Kaydettim! Artık Tahmin Etme Vakti! Bol Şans ' + @Arg + ' :)');
+                        SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 3));
+                    END
+                    ELSE
+                    BEGIN
+                        IF (@Type = 'think')
+                        BEGIN
+                            DELETE FROM @Str WHERE Index = 0;
+                            INSERT INTO @Str (Index, Element) VALUES (0, 'Tahminin?');
+                            DELETE FROM @Str WHERE Index = 1;
+                            INSERT INTO @Str (Index, Element) VALUES (1, 'Sence ne olabilir ' + @Arg + '?');
+                            DELETE FROM @Str WHERE Index = 2;
+                            INSERT INTO @Str (Index, Element) VALUES (2, 'Bi fikrin varmı?');
+                            DELETE FROM @Str WHERE Index = 3;
+                            INSERT INTO @Str (Index, Element) VALUES (3, 'Tahminin için bekliyorum ' + @Arg);
+                            DELETE FROM @Str WHERE Index = 4;
+                            INSERT INTO @Str (Index, Element) VALUES (4, 'İyi düşün ve öyle karar ver..');
+                            DELETE FROM @Str WHERE Index = 5;
+                            INSERT INTO @Str (Index, Element) VALUES (5, 'Bencee.. Ay, yardım edemem.. En iyisi tahmin et.');
+                            DELETE FROM @Str WHERE Index = 6;
+                            INSERT INTO @Str (Index, Element) VALUES (6, 'Şansını boşa harcama ' + @Arg);
+                            DELETE FROM @Str WHERE Index = 7;
+                            INSERT INTO @Str (Index, Element) VALUES (7, 'Sakın yanlış tahin ediyim deme haa');
+                            DELETE FROM @Str WHERE Index = 8;
+                            INSERT INTO @Str (Index, Element) VALUES (8, 'Hadi sıra sende ' + @Arg);
+                            SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 9));
+                        END
+                        ELSE
+                        BEGIN
+                            IF (@Type = 'wthink')
+                            BEGIN
+                                DELETE FROM @Str WHERE Index = 0;
+                                INSERT INTO @Str (Index, Element) VALUES (0, 'Yanlış! Tahminin?');
+                                DELETE FROM @Str WHERE Index = 1;
+                                INSERT INTO @Str (Index, Element) VALUES (1, 'Bu Değil. Sence ne olabilir ' + @Arg + '?');
+                                DELETE FROM @Str WHERE Index = 2;
+                                INSERT INTO @Str (Index, Element) VALUES (2, 'Sayı bu değil. Bi fikrin varmı?');
+                                DELETE FROM @Str WHERE Index = 3;
+                                INSERT INTO @Str (Index, Element) VALUES (3, 'Yeniden.. Tahminin için bekliyorum ' + @Arg);
+                                DELETE FROM @Str WHERE Index = 4;
+                                INSERT INTO @Str (Index, Element) VALUES (4, 'Şimdi iyi düşün ve öyle karar ver..');
+                                DELETE FROM @Str WHERE Index = 5;
+                                INSERT INTO @Str (Index, Element) VALUES (5, 'Hmm, Bencee.. Ay, yardım edemem.. En iyisi tahmin et.');
+                                DELETE FROM @Str WHERE Index = 6;
+                                INSERT INTO @Str (Index, Element) VALUES (6, 'Şansını boşa harcama ' + @Arg);
+                                DELETE FROM @Str WHERE Index = 7;
+                                INSERT INTO @Str (Index, Element) VALUES (7, 'Ah be abi. Sakın yanlış tahin ediyim deme haa');
+                                DELETE FROM @Str WHERE Index = 8;
+                                INSERT INTO @Str (Index, Element) VALUES (8, 'Tekrardan.. Hadi sıra sende ' + @Arg);
+                                SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 9));
+                            END
+                            ELSE
+                            BEGIN
+                                IF (@Type = 'sthink')
+                                BEGIN
+                                    DELETE FROM @Str WHERE Index = 0;
+                                    INSERT INTO @Str (Index, Element) VALUES (0, 'Hey, hey! Bu son hakkın. Dikkatli Ol!');
+                                    DELETE FROM @Str WHERE Index = 1;
+                                    INSERT INTO @Str (Index, Element) VALUES (1, 'Dur Biraz! Bu Son Şansın. İyi Kullan ' + @Arg);
+                                    DELETE FROM @Str WHERE Index = 2;
+                                    INSERT INTO @Str (Index, Element) VALUES (2, 'Kader Anı! Oyunu kazanman için son şans!');
+                                    DELETE FROM @Str WHERE Index = 3;
+                                    INSERT INTO @Str (Index, Element) VALUES (3, 'Buraya kadar tahmin edemediysen geçmiş olsun :) Bu arada, son şansını kullanmak üzeresin ' + @Arg);
+                                    DELETE FROM @Str WHERE Index = 4;
+                                    INSERT INTO @Str (Index, Element) VALUES (4, 'Tarih mi yazacaksın yoksa tarih mi olacaksın! İşte Kader Anı..');
+                                    SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 5));
+                                END
+                                ELSE
+                                BEGIN
+                                    IF (@Type = 'win')
+                                    BEGIN
+                                        DELETE FROM @Str WHERE Index = 0;
+                                        INSERT INTO @Str (Index, Element) VALUES (0, '[+] Kazandın!!!' + CHAR(13) + 'İşte Buuu! Nasılda tahmin ettin *o*' + CHAR(13) + CHAR(13) + 'Bir sonraki oyunda görüşmek üzere..');
+                                        DELETE FROM @Str WHERE Index = 1;
+                                        INSERT INTO @Str (Index, Element) VALUES (1, '[+] Tebrikler ' + @Arg + '.' + CHAR(13) + 'Oyunu başarılı bir şekilde bitirdin. Tahmininde haklı çıktın.' + CHAR(13) + 'Bir sonraki oyununda başarılar.');
+                                        DELETE FROM @Str WHERE Index = 2;
+                                        INSERT INTO @Str (Index, Element) VALUES (2, '[+] Seni tebrik ederim. Karşımda 6. Hissi çok kuvvetli biri var. Nasıl olurda kaybedeceğini düşündüm ki :)' + CHAR(13) + 'Bir oyuna daha var mısın..');
+                                        DELETE FROM @Str WHERE Index = 3;
+                                        INSERT INTO @Str (Index, Element) VALUES (3, '[+] Vay bee, gerçektende tahmin etmeyi başardın.. Seninle gurur duyuyorum! Kazandığın için çok mutluyum.' + CHAR(13) + 'Sonraki oyunlarda görüşmek dileğiyle..');
+                                        DELETE FROM @Str WHERE Index = 4;
+                                        INSERT INTO @Str (Index, Element) VALUES (4, '[+] İyi iş çıkardın ' + @Arg + CHAR(13) + 'Bu oyunun hakkını veriyorsun! Ama biliyorumki birdahaki sefere bu kadar kolay kazanamazsın \''_''/');
+                                        SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 5));
+                                    END
+                                    ELSE
+                                    BEGIN
+                                        IF (@Type = 'swin')
+                                        BEGIN
+                                            DELETE FROM @Str WHERE Index = 0;
+                                            INSERT INTO @Str (Index, Element) VALUES (0, '[⁂] İnanılmaz.. Tek Kelime İle Şahane!');
+                                            DELETE FROM @Str WHERE Index = 1;
+                                            INSERT INTO @Str (Index, Element) VALUES (1, '[⁂] Ne.. Bu kadar hızlı yenilemem..');
+                                            DELETE FROM @Str WHERE Index = 2;
+                                            INSERT INTO @Str (Index, Element) VALUES (2, '[⁂] Vay bee. Bu kadar kolay olacağını tahmin etmemiştim..');
+                                            DELETE FROM @Str WHERE Index = 3;
+                                            INSERT INTO @Str (Index, Element) VALUES (3, '[⁂] Sen..? Nasıl..? Hile mi yapıyosun??');
+                                            DELETE FROM @Str WHERE Index = 4;
+                                            INSERT INTO @Str (Index, Element) VALUES (4, '[⁂] Elon Musk falan mısın? Nasıl bu kadar çabuk bildin?');
+                                            SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 5));
+                                        END
+                                        ELSE
+                                        BEGIN
+                                            IF (@Type = 'lose')
+                                            BEGIN
+                                                DELETE FROM @Str WHERE Index = 0;
+                                                INSERT INTO @Str (Index, Element) VALUES (0, '[-] Üzgünüm, Oyunu Kaybettiniz.');
+                                                DELETE FROM @Str WHERE Index = 1;
+                                                INSERT INTO @Str (Index, Element) VALUES (1, '[-] Malesef oyunu kaybettin. Belkide sadece şanssız zamanındasın..');
+                                                DELETE FROM @Str WHERE Index = 2;
+                                                INSERT INTO @Str (Index, Element) VALUES (2, '[-] Ah be abi.. Aslında kolay bir sayı tutmuştum. Üzülme tekraradan oynayabilirsin.');
+                                                DELETE FROM @Str WHERE Index = 3;
+                                                INSERT INTO @Str (Index, Element) VALUES (3, '[-] Üzülerek belirtmek isterim ki, oyunu kaybetttin. Verilen 10 hak içerisinden, sayıyı tahmin etmeyi başaramadın.');
+                                                DELETE FROM @Str WHERE Index = 4;
+                                                INSERT INTO @Str (Index, Element) VALUES (4, '[-] Üzülme, her son bir başlangıçtır. Kaybetmen birdahaki sefere kazanamayacağın anlamına gelmez..');
+                                                SET @Payload = (SELECT Value FROM @Str WHERE Index = INT(RAND() * 5));
+                                            END
+                                            ELSE
+                                            BEGIN
+                                                IF (@Type = 'cold')
+                                                BEGIN
+                                                    DELETE FROM @Str WHERE Index = 0;
+                                                    INSERT INTO @Str (Index, Element) VALUES (0, '↘                ↙' + CHAR(13) + ' Soğuk' + CHAR(13) + '↗                ↖');
+                                                    SET @Payload = (SELECT Value FROM @Str WHERE Index = 0);
+                                                END
+                                                ELSE
+                                                BEGIN
+                                                    IF (@Type = 'warm')
+                                                    BEGIN
+                                                        DELETE FROM @Str WHERE Index = 0;
+                                                        INSERT INTO @Str (Index, Element) VALUES (0, '↘                ↙' + CHAR(13) + '  Ilık' + CHAR(13) + '↗                ↖');
+                                                        SET @Payload = (SELECT Value FROM @Str WHERE Index = 0);
+                                                    END
+                                                    ELSE
+                                                    BEGIN
+                                                        IF (@Type = 'hot')
+                                                        BEGIN
+                                                            DELETE FROM @Str WHERE Index = 0;
+                                                            INSERT INTO @Str (Index, Element) VALUES (0, '↘                ↙' + CHAR(13) + ' Sıcak' + CHAR(13) + '↗                ↖');
+                                                            SET @Payload = (SELECT Value FROM @Str WHERE Index = 0);
+                                                        END
+                                                        ELSE
+                                                        BEGIN
+                                                            IF (@Type = 'info')
+                                                            BEGIN
+                                                                DELETE FROM @Str WHERE Index = 0;
+                                                                INSERT INTO @Str (Index, Element) VALUES (0, 'Oyunun temellerinde çok basit fonksiyonlar ve düzenlemeler yatmaktadır.');
+                                                                DELETE FROM @Str WHERE Index = 1;
+                                                                INSERT INTO @Str (Index, Element) VALUES (1, 'Oyun önce sizden adınızı ister. Bazı durumlarda bunu kullanabilir.');
+                                                                DELETE FROM @Str WHERE Index = 2;
+                                                                INSERT INTO @Str (Index, Element) VALUES (2, 'İsim için gereken kriterler sadece 3 harf veya daha fazla olmasıdır.');
+                                                                DELETE FROM @Str WHERE Index = 3;
+                                                                INSERT INTO @Str (Index, Element) VALUES (3, 'Ardından oyun hakkında bilgilendirme mesajı gönderilir.');
+                                                                DELETE FROM @Str WHERE Index = 4;
+                                                                INSERT INTO @Str (Index, Element) VALUES (4, 'Mesajlar logger() denilen fonksiyon ile gönderilir. Bunu incelemek için üstteki ''Ana'' yazan yere basıp ''logger'' seçmelisiniz.');
+                                                                DELETE FROM @Str WHERE Index = 5;
+                                                                INSERT INTO @Str (Index, Element) VALUES (5, 'Daha sonra ise oyun modu seçimi ekranı gelecektir. Burda 2 farklı oyun modunu seçebilirsiniz. Kolay veya Zor.');
+                                                                DELETE FROM @Str WHERE Index = 6;
+                                                                INSERT INTO @Str (Index, Element) VALUES (6, 'Her iki oyun modunda önce bilgilendirme mesajı, ardından ise oyunun başladığına dair ufak bir mesaj gönderilir.');
+                                                                DELETE FROM @Str WHERE Index = 7;
+                                                                INSERT INTO @Str (Index, Element) VALUES (7, 'Kolay oyun modunda basitçe soğuk-sıcak oyunu mantığı yatar. Sayı, tahmine yakınsa soğuk, değilse sıcak denilir.');
+                                                                DELETE FROM @Str WHERE Index = 8;
+                                                                INSERT INTO @Str (Index, Element) VALUES (8, 'Normal oyun modunda ise yönergeler veya yardım yoktur. Kullanıcı tamamen içgüdüleri ile tahmin etmeye çalışır.');
+                                                                DELETE FROM @Str WHERE Index = 9;
+                                                                INSERT INTO @Str (Index, Element) VALUES (9, 'Tahmin doğru olduğunda son olarak tebrik mesajı gönderilir. Yanlış ise oyunun bittiğine dair bir mesaj ile birlikte tekrar oynamak için sorulur.');
+                                                                SET @Payload = (SELECT Value FROM @Str WHERE Index = CAST(@Arg AS INT));
+                                                            END
+                                                        END
+                                                    END
+                                                END
+                                            END
+                                        END
+                                    END
+                                END
+                            END
+                        END
+                    END
+                END
+            END
+        END
+    END
+    
+    -- prototip => plugins(<str>, <str>)
+    -- Örnek:
+    -- plugins("ask name", " ")
+    -- plugins("after name", "İsim")
+    
+    RETURN Payload;
+END;
+
+CREATE FUNCTION Rand (BIT Type)
+RETURNS INT
+BEGIN
+    DECLARE @Payload INT;
+    DECLARE @Opt INT;
+    DECLARE @Num INT;
+    DECLARE @var_İndex TABLE (Index INT, Element INT)
+    
+    -- 100 yerine 101 kullanmamızın nedeni array'ların (dizin) 0. konumdan başlamasıdır.
+    -- 
+    -- var dizin = ["bir", "iki", "üç"]
+    -- return dizin[0]     // "bir"
+    IF (NOT @Type)
+    BEGIN
+        SET @Payload = INT(RAND() * 101);
+        
+        -- Değişken kontrolü istemeyenler için altyapısı while ile kurulu (flowgorithm içinde varsayılan olarak bulunur) Random fonksiyonu.
+        -- Değişken kontrolü için;
+        -- rand(true)
+        -- 
+        -- Direk işlem için;
+        -- rand(false)
+        -- 
+        -- kullanın.
+        IF (@Payload = 0)
+        BEGIN
+            EXECUTE Rand False;
+        END
+    END
+    ELSE
+    BEGIN
+        
+        -- Bu kısım değişken kontrolü yapmak isteyenler içindir.
+        SET @Num = 0;
+        WHILE (1=1)
+        BEGIN
+            DELETE FROM @var_İndex WHERE Index = @Num;
+            INSERT INTO @var_İndex (Index, Element) VALUES (@Num, @Num);
+            SET @Num = @Num + 1;
+            IF (NOT @Num < 101) BREAK;
+        END
+        
+        -- do döngüsü kullanılır.
+        SET @Opt = INT(RAND() * 101);
+        SET @Payload = (SELECT Value FROM @var_İndex WHERE Index = @Opt);
+        IF (@Payload = 0)
+        BEGIN
+            EXECUTE Rand True;
+        END
+    END
+    
+    -- İndexler 0'a eşit olursa, sistem otomatik olarak başa döner ve sayı tekrardan karıştırılır.
+    -- Çıkış int (Tamsayı) olarak döner.
+    
+    RETURN Payload;
+END;
+
+-- The Input Table (Value VARCHAR) contains the "input" to this program.
+-- You can change where and how data is acquired by modifying the code below.
+CREATE PROCEDURE InitInput()
+BEGIN
+    SET @InputCursor = CURSOR FOR
+    SELECT Value FROM Input;
+END;
+
+CREATE FUNCTION Input()
+RETURNS VARCHAR
+BEGIN
+    DECLARE Result VARCHAR;
+    FETCH NEXT FROM @InputCursor INTO @Result;
+    RETURN(@Result);
+END;
+
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;

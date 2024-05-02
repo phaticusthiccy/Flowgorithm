@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="CASPER"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2023-05-07 03:57:10 &#214;S"/>
+        <attribute name="created" value="Q0FTUEVSO0FUVElDVVM7MjAyMy0wNS0wNzswMzo0NjowMSDDllM7MjQwNA=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMy0wNS0wNzswMzo1NzoxMCDDllM7MTsyNTE0"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="s&#252;t" type="Integer" array="False" size=""/>
+            <declare name="s&#252;tkontrol" type="Integer" array="False" size=""/>
+            <declare name="yumurta" type="Integer" array="False" size=""/>
+            <declare name="yumurtakontrol" type="Integer" array="False" size=""/>
+            <declare name="peynir" type="Integer" array="False" size=""/>
+            <declare name="peynirkontrol" type="Integer" array="False" size=""/>
+            <assign variable="s&#252;t" expression="10"/>
+            <assign variable="peynir" expression="10"/>
+            <assign variable="yumurta" expression="10"/>
+            <output expression="&quot;&#220;r&#252;nlerin Stok Durumu&quot; &amp; ToChar(13) &amp; ToChar(13)&amp; &quot;S&#252;t :: &quot; &amp; s&#252;t &amp; ToChar(13) &amp; &quot;Yumurta :: &quot; &amp; yumurta &amp; ToChar(13) &amp; &quot;Peynir :: &quot; &amp; peynir" newline="True"/>
+            <while expression="true">
+                <output expression="&quot;Alacaginiz urunun miktarini giriniz&quot; &amp; ToChar(13) &amp; &quot;S&#252;t ::&quot;" newline="True"/>
+                <input variable="s&#252;tkontrol"/>
+                <if expression="s&#252;tkontrol &gt; s&#252;t">
+                    <then>
+                        <output expression="&quot;Stokta yeterli sut yok&quot;" newline="True"/>
+                    </then>
+                    <else>
+                        <assign variable="s&#252;t" expression="s&#252;t - s&#252;tkontrol"/>
+                    </else>
+                </if>
+                <output expression="&quot;Alacaginiz urunun miktarini giriniz&quot; &amp; ToChar(13) &amp; &quot;Yumurta ::&quot;" newline="True"/>
+                <input variable="yumurtakontrol"/>
+                <if expression="yumurtakontrol &gt; yumurta">
+                    <then>
+                        <output expression="&quot;Stokta yeterli yumurta yok&quot;" newline="True"/>
+                    </then>
+                    <else>
+                        <assign variable="yumurta" expression="yumurta- yumurtakontrol"/>
+                    </else>
+                </if>
+                <output expression="&quot;Alacaginiz urunun miktarini giriniz&quot; &amp; ToChar(13) &amp; &quot;Peynir ::&quot;" newline="True"/>
+                <input variable="peynirkontrol"/>
+                <if expression="peynirkontrol&gt; peynir">
+                    <then>
+                        <output expression="&quot;Stokta yeterli peynir yok&quot;" newline="True"/>
+                    </then>
+                    <else>
+                        <assign variable="peynir" expression="peynir - peynirkontrol"/>
+                    </else>
+                </if>
+                <output expression="&quot;&#220;r&#252;nlerin G&#252;ncel Stok Durumu&quot; &amp; ToChar(13) &amp; ToChar(13)&amp; &quot;S&#252;t :: &quot; &amp; s&#252;t &amp; ToChar(13) &amp; &quot;Yumurta :: &quot; &amp; yumurta &amp; ToChar(13) &amp; &quot;Peynir :: &quot; &amp; peynir" newline="True"/>
+            </while>
+        </body>
+    </function>
+</flowgorithm>

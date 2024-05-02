@@ -1,0 +1,74 @@
+﻿DECLARE @InputCursor CURSOR GLOBAL;
+
+CREATE PROCEDURE Main()
+BEGIN
+    EXECUTE InitInput;
+
+    DECLARE @Süt INT;
+    DECLARE @Sütkontrol INT;
+    DECLARE @Yumurta INT;
+    DECLARE @Yumurtakontrol INT;
+    DECLARE @Peynir INT;
+    DECLARE @Peynirkontrol INT;
+    
+    SET @Süt = 10;
+    SET @Peynir = 10;
+    SET @Yumurta = 10;
+    EXECUTE Output 'Ürünlerin Stok Durumu' + CHAR(13) + CHAR(13) + 'Süt :: ' + @Süt + CHAR(13) + 'Yumurta :: ' + @Yumurta + CHAR(13) + 'Peynir :: ' + @Peynir;
+    WHILE (True)
+    BEGIN
+        EXECUTE Output 'Alacaginiz urunun miktarini giriniz' + CHAR(13) + 'Süt ::';
+        SET @Sütkontrol = Input();
+        IF (@Sütkontrol > @Süt)
+        BEGIN
+            EXECUTE Output 'Stokta yeterli sut yok';
+        END
+        ELSE
+        BEGIN
+            SET @Süt = @Süt - @Sütkontrol;
+        END
+        EXECUTE Output 'Alacaginiz urunun miktarini giriniz' + CHAR(13) + 'Yumurta ::';
+        SET @Yumurtakontrol = Input();
+        IF (@Yumurtakontrol > @Yumurta)
+        BEGIN
+            EXECUTE Output 'Stokta yeterli yumurta yok';
+        END
+        ELSE
+        BEGIN
+            SET @Yumurta = @Yumurta - @Yumurtakontrol;
+        END
+        EXECUTE Output 'Alacaginiz urunun miktarini giriniz' + CHAR(13) + 'Peynir ::';
+        SET @Peynirkontrol = Input();
+        IF (@Peynirkontrol > @Peynir)
+        BEGIN
+            EXECUTE Output 'Stokta yeterli peynir yok';
+        END
+        ELSE
+        BEGIN
+            SET @Peynir = @Peynir - @Peynirkontrol;
+        END
+        EXECUTE Output 'Ürünlerin Güncel Stok Durumu' + CHAR(13) + CHAR(13) + 'Süt :: ' + @Süt + CHAR(13) + 'Yumurta :: ' + @Yumurta + CHAR(13) + 'Peynir :: ' + @Peynir;
+    END
+END;
+
+-- The Input Table (Value VARCHAR) contains the "input" to this program.
+-- You can change where and how data is acquired by modifying the code below.
+CREATE PROCEDURE InitInput()
+BEGIN
+    SET @InputCursor = CURSOR FOR
+    SELECT Value FROM Input;
+END;
+
+CREATE FUNCTION Input()
+RETURNS VARCHAR
+BEGIN
+    DECLARE Result VARCHAR;
+    FETCH NEXT FROM @InputCursor INTO @Result;
+    RETURN(@Result);
+END;
+
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;

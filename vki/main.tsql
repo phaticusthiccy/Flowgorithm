@@ -1,0 +1,147 @@
+﻿DECLARE @InputCursor CURSOR GLOBAL;
+
+CREATE PROCEDURE Main()
+BEGIN
+    EXECUTE InitInput;
+
+    DECLARE @Kilo INT;
+    DECLARE @Boy FLOAT;
+    
+    EXECUTE Output 'Lütfen Kilonuzu Giriniz:   (Ex: 69)  ';
+    SET @Kilo = Input();
+    EXECUTE Delay 1;
+    EXECUTE Output 'Lütfen Boyunuzu Giriniz:   (Ex: 1.85)  ';
+    SET @Boy = Input();
+    DECLARE @Tab VARCHAR;
+    DECLARE @Cümle VARCHAR;
+    
+    SET @Cümle = 'VKI Tablosunda ';
+    IF (Vki(@Kilo, @Boy) = 'zayıf')
+    BEGIN
+        SET @Tab = @Cümle + '''Zayıf'' Bölümündesin';
+    END
+    ELSE
+    BEGIN
+        IF (Vki(@Kilo, @Boy) = 'normal')
+        BEGIN
+            SET @Tab = @Cümle + '''Normal'' Bölümdesin';
+        END
+        ELSE
+        BEGIN
+            IF (Vki(@Kilo, @Boy) = 'kilolu')
+            BEGIN
+                SET @Tab = @Cümle + '''Fazla Kilolu'' Bölümdesin';
+            END
+            ELSE
+            BEGIN
+                IF (Vki(@Kilo, @Boy) = '1. obez')
+                BEGIN
+                    SET @Tab = @Cümle + '''1. Obez'' Bölümündesin';
+                END
+                ELSE
+                BEGIN
+                    IF (Vki(@Kilo, @Boy) = '2. obez')
+                    BEGIN
+                        SET @Tab = @Cümle + '''2. Obez'' Bölümündesin';
+                    END
+                    ELSE
+                    BEGIN
+                        IF (Vki(@Kilo, @Boy) = '3. obez')
+                        BEGIN
+                            SET @Tab = @Cümle + '''3. Obez'' Bölümündesin';
+                        END
+                    END
+                END
+            END
+        END
+    END
+    EXECUTE Output @Tab;
+END;
+
+CREATE FUNCTION Delay (INT Sn)
+RETURNS BIT
+BEGIN
+    DECLARE @Sonuc BIT;
+    DECLARE @Ms INT;
+    
+    SET @Ms = @Sn * 33333;
+    DECLARE @n INT;
+    
+    SET @n = 0;
+    WHILE (@n != @Ms)
+    BEGIN
+        SET @n = @n + 1;
+    END
+    SET @Sonuc = True;
+    
+    RETURN Sonuc;
+END;
+
+CREATE FUNCTION Vki (INT Kilo, INT Boy)
+RETURNS VARCHAR
+BEGIN
+    DECLARE @Sonuc VARCHAR;
+    DECLARE @var_İndex INT;
+    
+    SET @var_İndex = @Kilo / (@Boy * @Boy);
+    IF (@var_İndex < 18)
+    BEGIN
+        SET @Sonuc = 'zayıf';
+    END
+    ELSE
+    BEGIN
+        IF (@var_İndex < 25)
+        BEGIN
+            SET @Sonuc = 'normal';
+        END
+        ELSE
+        BEGIN
+            IF (@var_İndex < 30)
+            BEGIN
+                SET @Sonuc = 'kilolu';
+            END
+            ELSE
+            BEGIN
+                IF (@var_İndex < 35)
+                BEGIN
+                    SET @Sonuc = '1. obez';
+                END
+                ELSE
+                BEGIN
+                    IF (@var_İndex < 40)
+                    BEGIN
+                        SET @Sonuc = '2. obez';
+                    END
+                    ELSE
+                    BEGIN
+                        SET @Sonuc = '3. obez';
+                    END
+                END
+            END
+        END
+    END
+    
+    RETURN Sonuc;
+END;
+
+-- The Input Table (Value VARCHAR) contains the "input" to this program.
+-- You can change where and how data is acquired by modifying the code below.
+CREATE PROCEDURE InitInput()
+BEGIN
+    SET @InputCursor = CURSOR FOR
+    SELECT Value FROM Input;
+END;
+
+CREATE FUNCTION Input()
+RETURNS VARCHAR
+BEGIN
+    DECLARE Result VARCHAR;
+    FETCH NEXT FROM @InputCursor INTO @Result;
+    RETURN(@Result);
+END;
+
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;

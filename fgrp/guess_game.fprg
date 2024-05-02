@@ -1,0 +1,590 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="CASPER"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2022-05-19 03:27:55 &#214;S"/>
+        <attribute name="created" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNS0xMzswNTozOToyNyDDllM7MjQxMg=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNS0xMzswNjo1NTo0MCDDllM7MTtDQVNQRVI7QVRUSUNVUzsyMDIyLTA0LTAxOzAyOjI0OjIzIMOWUzt0b3BsYW1hICh0ZWsgc2F5xLFsYXIpLmZwcmc7NzY4MA=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNS0xOTswMzoyNzo1NSDDllM7NDsyNTI1"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="sync, find" type="Boolean" array="False" size=""/>
+            <declare name="name" type="String" array="False" size=""/>
+            <declare name="mode, number" type="Integer" array="False" size=""/>
+            <call expression="logger(&quot;str&quot;, plugins(&quot;ask name&quot;, &quot;&quot;))"/>
+            <call expression="delay(2)"/>
+            <input variable="name"/>
+            <call expression="namecorrection(name)"/>
+            <call expression="delay(2)"/>
+            <comment text="&#304;sim Alma K&#305;sm&#305; Tamamland&#305;"/>
+            <call expression="logger(&quot;str&quot;, plugins(&quot;after name&quot;, name))"/>
+            <call expression="delay(9)"/>
+            <call expression="logger(&quot;str&quot;, plugins(&quot;game mode&quot;, &quot;&quot;))"/>
+            <input variable="mode"/>
+            <comment text="Oyun Modu Ba&#351;ar&#305;yla Se&#231;ildi"/>
+            <if expression="mode == 1 or mode == 2">
+                <then>
+                    <if expression="mode == 1">
+                        <then>
+                            <comment text="Kolay Oyun Modu"/>
+                            <declare name="index, index2, think" type="Integer" array="False" size=""/>
+                            <assign variable="index" expression="0"/>
+                            <assign variable="index2" expression="0"/>
+                            <assign variable="sync" expression="true"/>
+                            <assign variable="number" expression="rand(true)"/>
+                            <call expression="logger(&quot;str&quot;, plugins(&quot;get num&quot;, name))"/>
+                            <call expression="delay(2)"/>
+                            <comment text="Say&#305; Belirlendi"/>
+                            <while expression="sync">
+                                <if expression="index == 10">
+                                    <then>
+                                        <assign variable="find" expression="false"/>
+                                        <assign variable="sync" expression="false"/>
+                                        <comment text="10 Hak &#304;&#231;inden Tahmin Edilemez ise D&#246;ng&#252;y&#252; Kapat"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="index2" expression="index2 + 1"/>
+                                        <assign variable="index" expression="index + 1"/>
+                                        <if expression="index == 1">
+                                            <then>
+                                                <comment text="&#304;lk ba&#351;lama mesaj&#305;"/>
+                                                <call expression="logger(&quot;str&quot;, plugins(&quot;think&quot;, name))"/>
+                                            </then>
+                                            <else>
+                                                <comment text="Sonraki ba&#351;lama mesajlar&#305;"/>
+                                                <if expression="index == 10">
+                                                    <then>
+                                                        <comment text="Son tahmin hakk&#305; i&#231;in bilgilendirme mesaj&#305;"/>
+                                                        <call expression="logger(&quot;str&quot;, plugins(&quot;sthink&quot;, name))"/>
+                                                        <call expression="delay(3.5)"/>
+                                                    </then>
+                                                    <else>
+                                                        <comment text="Yanl&#305;&#351; tahminler i&#231;in bilgilendirme mesaj&#305;"/>
+                                                        <call expression="logger(&quot;str&quot;, plugins(&quot;wthink&quot;, name))"/>
+                                                    </else>
+                                                </if>
+                                            </else>
+                                        </if>
+                                        <input variable="think"/>
+                                        <if expression="think == number">
+                                            <then>
+                                                <comment text="Tahmin Do&#287;ru &#304;se `find` bool'u true olarak ayarla ve d&#246;ng&#252;y&#252; kapat."/>
+                                                <assign variable="find" expression="true"/>
+                                                <assign variable="sync" expression="false"/>
+                                            </then>
+                                            <else>
+                                                <call expression="delay(1)"/>
+                                                <if expression="index == 10">
+                                                    <then/>
+                                                    <else>
+                                                        <if expression="think &gt; number">
+                                                            <then>
+                                                                <comment text="Tahmin edilen say&#305;, ana say&#305;dan daha b&#252;y&#252;k ise buraya d&#246;n"/>
+                                                                <if expression="think - number &gt; 25">
+                                                                    <then>
+                                                                        <comment text="Tahmin, say&#305;dan uzak ise bunu g&#246;nder"/>
+                                                                        <call expression="logger(&quot;str&quot;, plugins(&quot;cold&quot;, &quot;&quot;))"/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <if expression="think - number &gt; 15">
+                                                                            <then>
+                                                                                <comment text="Tahmin, say&#305;ya biraz yak&#305;n ise bunu g&#246;nder"/>
+                                                                                <call expression="logger(&quot;str&quot;, plugins(&quot;warm&quot;, &quot;&quot;))"/>
+                                                                            </then>
+                                                                            <else>
+                                                                                <comment text="Tahmin, say&#305;ya &#231;ok yak&#305;n ise bunu g&#246;nder"/>
+                                                                                <call expression="logger(&quot;str&quot;, plugins(&quot;hot&quot;, &quot;&quot;))"/>
+                                                                            </else>
+                                                                        </if>
+                                                                    </else>
+                                                                </if>
+                                                            </then>
+                                                            <else>
+                                                                <comment text="Tahmin edilen say&#305;, ana say&#305;dan daha k&#252;&#231;&#252;k ise buraya d&#246;n"/>
+                                                                <if expression="number - think &gt; 25">
+                                                                    <then>
+                                                                        <comment text="Tahmin, say&#305;dan uzak ise bunu g&#246;nder"/>
+                                                                        <call expression="logger(&quot;str&quot;, plugins(&quot;cold&quot;, &quot;&quot;))"/>
+                                                                    </then>
+                                                                    <else>
+                                                                        <if expression="number - think &gt; 15">
+                                                                            <then>
+                                                                                <comment text="Tahmin, say&#305;ya biraz yak&#305;n ise bunu g&#246;nder"/>
+                                                                                <call expression="logger(&quot;str&quot;, plugins(&quot;warm&quot;, &quot;&quot;))"/>
+                                                                            </then>
+                                                                            <else>
+                                                                                <comment text="Tahmin, say&#305;ya &#231;ok yak&#305;n ise bunu g&#246;nder"/>
+                                                                                <call expression="logger(&quot;str&quot;, plugins(&quot;hot&quot;, &quot;&quot;))"/>
+                                                                            </else>
+                                                                        </if>
+                                                                    </else>
+                                                                </if>
+                                                            </else>
+                                                        </if>
+                                                    </else>
+                                                </if>
+                                            </else>
+                                        </if>
+                                    </else>
+                                </if>
+                            </while>
+                            <if expression="find">
+                                <then>
+                                    <comment text="Oyun Kazan&#305;ld&#305;&#287;&#305;nda Buraya D&#246;n"/>
+                                    <if expression="index2 &lt; 4">
+                                        <then>
+                                            <comment text="Say&#305; hemen tahmin edilirse ek mesaj g&#246;nder"/>
+                                            <call expression="logger(&quot;str&quot;, plugins(&quot;swin&quot;, name))"/>
+                                            <call expression="delay(1)"/>
+                                            <call expression="logger(&quot;str&quot;, plugins(&quot;win&quot;, name))"/>
+                                            <call expression="delay(2)"/>
+                                            <call expression="logger(&quot;str&quot;, index2 &amp; &quot;. Denemede Oyunu Kazand&#305;n&#305;z!&quot;)"/>
+                                        </then>
+                                        <else>
+                                            <comment text="Klasik tebrik mesaj&#305;"/>
+                                            <call expression="logger(&quot;str&quot;, plugins(&quot;win&quot;, name))"/>
+                                            <call expression="delay(2)"/>
+                                            <call expression="logger(&quot;str&quot;, index2 &amp; &quot;. Denemede Oyunu Kazand&#305;n&#305;z!&quot;)"/>
+                                        </else>
+                                    </if>
+                                </then>
+                                <else>
+                                    <comment text="Oyun Kaybedildi&#287;inde Buraya D&#246;n"/>
+                                    <call expression="logger(&quot;str&quot;, plugins(&quot;lose&quot;, name))"/>
+                                    <call expression="delay(2)"/>
+                                    <call expression="logger(&quot;str&quot;, &quot;Bir kez daha oynamak i&#231;in 1 yazman yeterli.&quot;)"/>
+                                    <input variable="name"/>
+                                    <if expression="name == &quot;1&quot;">
+                                        <then>
+                                            <comment text="Program kapanmadan bir kez daha oynama hakk&#305; verir."/>
+                                            <call expression="main"/>
+                                        </then>
+                                        <else/>
+                                    </if>
+                                </else>
+                            </if>
+                        </then>
+                        <else>
+                            <comment text="Normal Oyun Modu"/>
+                            <declare name="index, index2, think" type="Integer" array="False" size=""/>
+                            <assign variable="index" expression="0"/>
+                            <assign variable="index2" expression="0"/>
+                            <assign variable="sync" expression="true"/>
+                            <assign variable="number" expression="rand(false)"/>
+                            <call expression="logger(&quot;str&quot;, plugins(&quot;get num&quot;, name))"/>
+                            <call expression="delay(2)"/>
+                            <comment text="Say&#305; Belirlendi"/>
+                            <while expression="sync">
+                                <if expression="index == 10">
+                                    <then>
+                                        <assign variable="find" expression="false"/>
+                                        <assign variable="sync" expression="false"/>
+                                        <comment text="10 Hak &#304;&#231;inden Tahmin Edilemez ise D&#246;ng&#252;y&#252; Kapat"/>
+                                    </then>
+                                    <else>
+                                        <assign variable="index2" expression="index2 + 1"/>
+                                        <assign variable="index" expression="index + 1"/>
+                                        <if expression="index == 1">
+                                            <then>
+                                                <comment text="&#304;lk ba&#351;lama mesaj&#305;"/>
+                                                <call expression="logger(&quot;str&quot;, plugins(&quot;think&quot;, name))"/>
+                                            </then>
+                                            <else>
+                                                <comment text="Sonraki ba&#351;lama mesajlar&#305;"/>
+                                                <if expression="index == 10">
+                                                    <then>
+                                                        <comment text="Son tahmin hakk&#305; i&#231;in bilgilendirme mesaj&#305;"/>
+                                                        <call expression="logger(&quot;str&quot;, plugins(&quot;sthink&quot;, name))"/>
+                                                        <call expression="delay(3.5)"/>
+                                                    </then>
+                                                    <else>
+                                                        <comment text="Yanl&#305;&#351; tahminler i&#231;in bilgilendirme mesaj&#305;"/>
+                                                        <call expression="logger(&quot;str&quot;, plugins(&quot;wthink&quot;, name))"/>
+                                                    </else>
+                                                </if>
+                                            </else>
+                                        </if>
+                                        <input variable="think"/>
+                                        <if expression="think == number">
+                                            <then>
+                                                <comment text="Tahmin Do&#287;ru &#304;se `find` bool'u true olarak ayarla ve d&#246;ng&#252;y&#252; kapat."/>
+                                                <assign variable="find" expression="true"/>
+                                                <assign variable="sync" expression="false"/>
+                                            </then>
+                                            <else>
+                                                <comment text="Tahmin Yanl&#305;&#351; &#304;se D&#246;ng&#252;y&#252; Yeniden Ba&#351;lat"/>
+                                            </else>
+                                        </if>
+                                    </else>
+                                </if>
+                            </while>
+                            <if expression="find">
+                                <then>
+                                    <comment text="Oyun Kazan&#305;ld&#305;&#287;&#305;nda Buraya D&#246;n"/>
+                                    <if expression="index2 &lt; 4">
+                                        <then>
+                                            <comment text="Say&#305; hemen tahmin edilirse ek mesaj g&#246;nder"/>
+                                            <call expression="logger(&quot;str&quot;, plugins(&quot;swin&quot;, name))"/>
+                                            <call expression="delay(1)"/>
+                                            <call expression="logger(&quot;str&quot;, plugins(&quot;win&quot;, name))"/>
+                                            <call expression="delay(2)"/>
+                                            <call expression="logger(&quot;str&quot;, index2 &amp; &quot;. Denemede Oyunu Kazand&#305;n&#305;z!&quot;)"/>
+                                        </then>
+                                        <else>
+                                            <comment text="Klasik tebrik mesaj&#305;"/>
+                                            <call expression="logger(&quot;str&quot;, plugins(&quot;win&quot;, name))"/>
+                                            <call expression="delay(2)"/>
+                                            <call expression="logger(&quot;str&quot;, index2 &amp; &quot;. Denemede Oyunu Kazand&#305;n&#305;z!&quot;)"/>
+                                        </else>
+                                    </if>
+                                </then>
+                                <else>
+                                    <comment text="Oyun Kaybedildi&#287;inde Buraya D&#246;n"/>
+                                    <call expression="logger(&quot;str&quot;, plugins(&quot;lose&quot;, name))"/>
+                                    <call expression="delay(2)"/>
+                                    <call expression="logger(&quot;str&quot;, &quot;Bir kez daha oynamak i&#231;in 1 yazman yeterli.&quot;)"/>
+                                    <input variable="name"/>
+                                    <if expression="name == &quot;1&quot;">
+                                        <then>
+                                            <comment text="Program kapanmadan bir kez daha oynama hakk&#305; verir."/>
+                                            <call expression="main"/>
+                                        </then>
+                                        <else/>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </then>
+                <else>
+                    <if expression="mode == 3">
+                        <then>
+                            <comment text="Bilgilendirme Mesaj&#305;"/>
+                            <assign variable="number" expression="0"/>
+                            <do expression="number != 10">
+                                <call expression="logger(&quot;str&quot;, plugins(&quot;info&quot;, ToString(number)))"/>
+                                <call expression="delay(4)"/>
+                                <assign variable="number" expression="number + 1"/>
+                            </do>
+                            <comment text="do D&#246;g&#252;s&#252; kullanmak en iyi se&#231;enek olacakt&#305;r"/>
+                        </then>
+                        <else>
+                            <call expression="logger(&quot;str&quot;, plugins(&quot;wmode&quot;, &quot;&quot;))"/>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </body>
+    </function>
+    <function name="delay" type="Boolean" variable="payload">
+        <parameters>
+            <parameter name="sn" type="Real" array="False"/>
+        </parameters>
+        <body>
+            <comment text="Delay (bekleme s&#252;resi) i&#231;in gerekli fonskiyon. Flowgorithm;  &#13;&#10;setTimeout()  &#13;&#10;time.sleep()  &#13;&#10;gibi fonksiyon bar&#305;nd&#305;rmad&#305;&#287;&#305; i&#231;in, gecikmeyi while d&#246;ng&#252;s&#252; ile yapar&#305;z."/>
+            <declare name="payload" type="Boolean" array="False" size=""/>
+            <declare name="ms" type="Real" array="False" size=""/>
+            <assign variable="ms" expression="sn * 30000"/>
+            <comment text="1 Saniye &#8778; 30.000 Say&#305;m  &#13;&#10;1 Say&#305;m = 3,14e-5"/>
+            <declare name="n" type="Integer" array="False" size=""/>
+            <assign variable="n" expression="0"/>
+            <while expression="n &lt; ms">
+                <assign variable="n" expression="n + 1"/>
+            </while>
+            <assign variable="payload" expression="true"/>
+        </body>
+    </function>
+    <function name="exit" type="Boolean" variable="ex">
+        <parameters/>
+        <body>
+            <comment text="Bu fonksiyon herhangi bir hatada veya istenmeyen de&#287;erlerde program&#305;n &#231;al&#305;&#351;mas&#305;n&#305; engeller. "/>
+            <comment text="Bu fonskiyon hi&#231;bir &#351;ekilde pas ge&#231;ilemez."/>
+            <comment text="Fonksiyon bir kez &#231;al&#305;&#351;&#305;rsa durdurmak imkans&#305;zd&#305;r. "/>
+            <do expression="true">
+                <breakpoint/>
+            </do>
+        </body>
+    </function>
+    <function name="logger" type="Boolean" variable="payload">
+        <parameters>
+            <parameter name="type" type="String" array="False"/>
+            <parameter name="this" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="payload" type="Boolean" array="False" size=""/>
+            <comment text="&#199;&#305;kt&#305; kullanmak yerine daha efektik bir &#351;ekilde logger fonksiyonunu kullanal&#305;m.&#13;&#10;&#13;&#10;&#199;&#305;kt&#305;larda olu&#351;an karma&#351;a ve syntx hatalar&#305; logger i&#231;erisinde otomatik d&#252;zeltilir."/>
+            <if expression="type == &quot;int&quot;">
+                <then>
+                    <output expression="ToInteger(this)" newline="True"/>
+                    <assign variable="payload" expression="true"/>
+                </then>
+                <else>
+                    <if expression="type == &quot;str&quot;">
+                        <then>
+                            <output expression="ToString(this)" newline="True"/>
+                            <assign variable="payload" expression="true"/>
+                        </then>
+                        <else>
+                            <if expression="type == &quot;bool&quot;">
+                                <then>
+                                    <assign variable="payload" expression="this"/>
+                                </then>
+                                <else>
+                                    <comment text="Flowgorithm Array ve Object (dizin ve obje) d&#246;n&#252;&#351;leri desteklemez. Logger (&#231;&#305;kt&#305; kontrol edicisi) sadece say&#305;, harf veya do&#287;ru-yanl&#305;&#351; d&#246;n&#252;&#351;&#252; yapabilir."/>
+                                    <comment text="Program durdurulur.   &#13;&#10;process.exit()"/>
+                                    <call expression="exit()"/>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <comment text="logger(&quot;str&quot;, &quot;test&quot;)  =&gt;  String &#304;&#231;in    &#13;&#10;logger(&quot;int&quot;, &quot;190&quot;)  =&gt;  Say&#305; &#304;&#231;in    &#13;&#10;logger(&quot;bool&quot;, true)  =&gt; true-false i&#231;in     "/>
+        </body>
+    </function>
+    <function name="namecorrection" type="Boolean" variable="payload">
+        <parameters>
+            <parameter name="name" type="String" array="False"/>
+        </parameters>
+        <body>
+            <declare name="payload" type="Boolean" array="False" size=""/>
+            <if expression="len(name) &lt; 3">
+                <then>
+                    <call expression="logger(&quot;str&quot;, &quot;&#304;sminiz 3 kelimeden k&#305;sa olmamal&#305;.&quot; &amp; ToChar(13) &amp; &quot;L&#252;tfen program&#305; ba&#351;tan ba&#351;lat&#305;n.&quot;)"/>
+                    <call expression="exit()"/>
+                </then>
+                <else>
+                    <assign variable="payload" expression="true"/>
+                </else>
+            </if>
+            <comment text="Sistemin istedi&#287;i isim 3 kelimeden k&#305;sa olursa oyun ba&#351;layamaz."/>
+        </body>
+    </function>
+    <function name="plugins" type="String" variable="payload">
+        <parameters>
+            <parameter name="type" type="String" array="False"/>
+            <parameter name="arg" type="String" array="False"/>
+        </parameters>
+        <body>
+            <comment text="Program i&#231;indeki &#231;e&#351;itlilik i&#231;in gerekli fonksiyon.  &#13;&#10;Fonksiyon karma&#351;as&#305; olmamas&#305; i&#231;in k&#305;salt&#305;ld&#305;."/>
+            <declare name="payload" type="String" array="False" size=""/>
+            <declare name="str" type="String" array="True" size="10"/>
+            <if expression="type == &quot;ask name&quot;">
+                <then>
+                    <assign variable="str[0]" expression="&quot;Oyuna Ho&#351;geldin Yabanc&#305;!&quot; &amp; ToChar(13) &amp; &quot;L&#252;tfen Ad&#305;n&#305; Gir:&quot;"/>
+                    <assign variable="str[1]" expression="&quot;Hey, Merhaba Yabac&#305; :)&quot; &amp; ToChar(13) &amp; &quot;L&#252;tfen &#304;smini Yazar m&#305;s&#305;n?&quot;"/>
+                    <assign variable="str[2]" expression="&quot;Yeni bir oyuncu. Ya&#351;as&#305;nn!&quot; &amp; ToChar(13) &amp; &quot;Ad&#305;n&#305; s&#246;ylermisin l&#252;tfen..&quot;"/>
+                    <assign variable="str[3]" expression="&quot;Oyunda Yeni Bir Kat&#305;l&#305;mc&#305; Var!&quot; &amp; ToChar(13) &amp; &quot;L&#252;tfen &#304;smini Gir:&quot;"/>
+                    <assign variable="str[4]" expression="&quot;&#304;&#351;te yeni bir oyuncu daha!&quot; &amp; ToChar(13) &amp; &quot;Sana nas&#305;l hitap etmemi istersin?&quot;"/>
+                    <assign variable="str[5]" expression="&quot;Seni daha &#246;nce buralarda g&#246;rmedim..&quot; &amp; ToChar(13) &amp; &quot;Oyuna ba&#351;laman i&#231;in ismine ihtiyac&#305;m var. L&#252;tfen ismini s&#246;yle.&quot;"/>
+                    <assign variable="str[6]" expression="&quot;Oyuna Ho&#351;geldin!&quot; &amp; ToChar(13) &amp; &quot;Birazdan a&#351;a&#287;&#305;daki giri&#351; b&#246;l&#252;m&#252; a&#231;&#305;lacak. L&#252;tfen oraya ad&#305;n&#305; yaz.&quot;"/>
+                    <assign variable="payload" expression="str[Random(7)]"/>
+                </then>
+                <else>
+                    <if expression="type == &quot;after name&quot;">
+                        <then>
+                            <assign variable="str[0]" expression="&quot;Merhaba &quot; &amp; arg &amp; ToChar(13) &amp; &quot;Oyunun kurallar&#305; &#351;unlard&#305;r:&quot; &amp; ToChar(13) &amp; &quot;1) Sistem 0-100 aras&#305;nda say&#305; se&#231;er.&quot; &amp; ToChar(13) &amp; &quot;2) Say&#305;y&#305; tahmin etmeye &#231;al&#305;&#351;&#305;rs&#305;n&quot; &amp; ToChar(13) &amp; &quot;3) Toplam 10 adet ba&#351;ar&#305;s&#305;z denemeden sonra oyun biter.&quot; &amp; ToChar(13) &amp; &quot;4) Say&#305; bulunursa oyun kazan&#305;l&#305;r!&quot;"/>
+                            <assign variable="payload" expression="str[0]"/>
+                        </then>
+                        <else>
+                            <if expression="type == &quot;game mode&quot;">
+                                <then>
+                                    <assign variable="str[0]" expression="&quot;L&#252;tfen Oyun Modunu Se&#231;&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;1) Kolay (S&#305;cak-So&#287;uk Mant&#305;&#287;&#305;)&quot; &amp; ToChar(13) &amp; &quot;2) Normal (Y&#246;nergeler Yok)&quot; &amp; ToChar(13) &amp; &quot;3) &#304;&#351;leyi&#351; Hakk&#305;nda Bilgi Al&quot;"/>
+                                    <assign variable="payload" expression="str[0]"/>
+                                </then>
+                                <else>
+                                    <if expression="type == &quot;wmode&quot;">
+                                        <then>
+                                            <assign variable="str[0]" expression="&quot;L&#252;tfen Sadece 1 veya 2 Yaz&#305;n&quot;"/>
+                                            <assign variable="str[1]" expression="&quot;Yanl&#305;&#351; Se&#231;im! Sadece 1 veya 2 yaz&#305;n!&quot;"/>
+                                            <assign variable="payload" expression="str[Random(2)]"/>
+                                        </then>
+                                        <else>
+                                            <if expression="type == &quot;get num&quot;">
+                                                <then>
+                                                    <assign variable="str[0]" expression="&quot;Pekala, say&#305;m&#305; beliredim. &#350;imdi s&#305;ra sende! Hadi Tahmin Et! &quot; &amp; arg"/>
+                                                    <assign variable="str[1]" expression="&quot;Tuttum! Hadi Ba&#351;layal&#305;m :)&quot;"/>
+                                                    <assign variable="str[2]" expression="&quot;Say&#305;y&#305; Belle&#287;ime Kaydettim! Art&#305;k Tahmin Etme Vakti! Bol &#350;ans &quot; &amp; arg &amp; &quot; :)&quot;"/>
+                                                    <assign variable="payload" expression="str[Random(3)]"/>
+                                                </then>
+                                                <else>
+                                                    <if expression="type == &quot;think&quot;">
+                                                        <then>
+                                                            <assign variable="str[0]" expression="&quot;Tahminin?&quot;"/>
+                                                            <assign variable="str[1]" expression="&quot;Sence ne olabilir &quot; &amp; arg &amp; &quot;?&quot;"/>
+                                                            <assign variable="str[2]" expression="&quot;Bi fikrin varm&#305;?&quot;"/>
+                                                            <assign variable="str[3]" expression="&quot;Tahminin i&#231;in bekliyorum &quot; &amp; arg"/>
+                                                            <assign variable="str[4]" expression="&quot;&#304;yi d&#252;&#351;&#252;n ve &#246;yle karar ver..&quot;"/>
+                                                            <assign variable="str[5]" expression="&quot;Bencee.. Ay, yard&#305;m edemem.. En iyisi tahmin et.&quot;"/>
+                                                            <assign variable="str[6]" expression="&quot;&#350;ans&#305;n&#305; bo&#351;a harcama &quot; &amp; arg"/>
+                                                            <assign variable="str[7]" expression="&quot;Sak&#305;n yanl&#305;&#351; tahin ediyim deme haa&quot;"/>
+                                                            <assign variable="str[8]" expression="&quot;Hadi s&#305;ra sende &quot; &amp; arg"/>
+                                                            <assign variable="payload" expression="str[Random(9)]"/>
+                                                        </then>
+                                                        <else>
+                                                            <if expression="type == &quot;wthink&quot;">
+                                                                <then>
+                                                                    <assign variable="str[0]" expression="&quot;Yanl&#305;&#351;! Tahminin?&quot;"/>
+                                                                    <assign variable="str[1]" expression="&quot;Bu De&#287;il. Sence ne olabilir &quot; &amp; arg &amp; &quot;?&quot;"/>
+                                                                    <assign variable="str[2]" expression="&quot;Say&#305; bu de&#287;il. Bi fikrin varm&#305;?&quot;"/>
+                                                                    <assign variable="str[3]" expression="&quot;Yeniden.. Tahminin i&#231;in bekliyorum &quot; &amp; arg"/>
+                                                                    <assign variable="str[4]" expression="&quot;&#350;imdi iyi d&#252;&#351;&#252;n ve &#246;yle karar ver..&quot;"/>
+                                                                    <assign variable="str[5]" expression="&quot;Hmm, Bencee.. Ay, yard&#305;m edemem.. En iyisi tahmin et.&quot;"/>
+                                                                    <assign variable="str[6]" expression="&quot;&#350;ans&#305;n&#305; bo&#351;a harcama &quot; &amp; arg"/>
+                                                                    <assign variable="str[7]" expression="&quot;Ah be abi. Sak&#305;n yanl&#305;&#351; tahin ediyim deme haa&quot;"/>
+                                                                    <assign variable="str[8]" expression="&quot;Tekrardan.. Hadi s&#305;ra sende &quot; &amp; arg"/>
+                                                                    <assign variable="payload" expression="str[Random(9)]"/>
+                                                                </then>
+                                                                <else>
+                                                                    <if expression="type == &quot;sthink&quot;">
+                                                                        <then>
+                                                                            <assign variable="str[0]" expression="&quot;Hey, hey! Bu son hakk&#305;n. Dikkatli Ol!&quot;"/>
+                                                                            <assign variable="str[1]" expression="&quot;Dur Biraz! Bu Son &#350;ans&#305;n. &#304;yi Kullan &quot; &amp; arg"/>
+                                                                            <assign variable="str[2]" expression="&quot;Kader An&#305;! Oyunu kazanman i&#231;in son &#351;ans!&quot;"/>
+                                                                            <assign variable="str[3]" expression="&quot;Buraya kadar tahmin edemediysen ge&#231;mi&#351; olsun :) Bu arada, son &#351;ans&#305;n&#305; kullanmak &#252;zeresin &quot; &amp; arg"/>
+                                                                            <assign variable="str[4]" expression="&quot;Tarih mi yazacaks&#305;n yoksa tarih mi olacaks&#305;n! &#304;&#351;te Kader An&#305;..&quot;"/>
+                                                                            <assign variable="payload" expression="str[Random(5)]"/>
+                                                                        </then>
+                                                                        <else>
+                                                                            <if expression="type == &quot;win&quot;">
+                                                                                <then>
+                                                                                    <assign variable="str[0]" expression="&quot;[+] Kazand&#305;n!!!&quot; &amp; ToChar(13) &amp; &quot;&#304;&#351;te Buuu! Nas&#305;lda tahmin ettin *o*&quot; &amp; ToChar(13) &amp; ToChar(13) &amp; &quot;Bir sonraki oyunda g&#246;r&#252;&#351;mek &#252;zere..&quot;"/>
+                                                                                    <assign variable="str[1]" expression="&quot;[+] Tebrikler &quot; &amp; arg &amp; &quot;.&quot; &amp; ToChar(13) &amp; &quot;Oyunu ba&#351;ar&#305;l&#305; bir &#351;ekilde bitirdin. Tahmininde hakl&#305; &#231;&#305;kt&#305;n.&quot; &amp; ToChar(13) &amp; &quot;Bir sonraki oyununda ba&#351;ar&#305;lar.&quot;"/>
+                                                                                    <assign variable="str[2]" expression="&quot;[+] Seni tebrik ederim. Kar&#351;&#305;mda 6. Hissi &#231;ok kuvvetli biri var. Nas&#305;l olurda kaybedece&#287;ini d&#252;&#351;&#252;nd&#252;m ki :)&quot; &amp; ToChar(13) &amp; &quot;Bir oyuna daha var m&#305;s&#305;n..&quot;"/>
+                                                                                    <assign variable="str[3]" expression="&quot;[+] Vay bee, ger&#231;ektende tahmin etmeyi ba&#351;ard&#305;n.. Seninle gurur duyuyorum! Kazand&#305;&#287;&#305;n i&#231;in &#231;ok mutluyum.&quot; &amp; ToChar(13) &amp; &quot;Sonraki oyunlarda g&#246;r&#252;&#351;mek dile&#287;iyle..&quot;"/>
+                                                                                    <assign variable="str[4]" expression="&quot;[+] &#304;yi i&#351; &#231;&#305;kard&#305;n &quot; &amp; arg &amp; ToChar(13) &amp; &quot;Bu oyunun hakk&#305;n&#305; veriyorsun! Ama biliyorumki birdahaki sefere bu kadar kolay kazanamazs&#305;n \'_'/&quot;"/>
+                                                                                    <assign variable="payload" expression="str[Random(5)]"/>
+                                                                                </then>
+                                                                                <else>
+                                                                                    <if expression="type == &quot;swin&quot;">
+                                                                                        <then>
+                                                                                            <assign variable="str[0]" expression="&quot;[&#8258;] &#304;nan&#305;lmaz.. Tek Kelime &#304;le &#350;ahane!&quot;"/>
+                                                                                            <assign variable="str[1]" expression="&quot;[&#8258;] Ne.. Bu kadar h&#305;zl&#305; yenilemem..&quot;"/>
+                                                                                            <assign variable="str[2]" expression="&quot;[&#8258;] Vay bee. Bu kadar kolay olaca&#287;&#305;n&#305; tahmin etmemi&#351;tim..&quot;"/>
+                                                                                            <assign variable="str[3]" expression="&quot;[&#8258;] Sen..? Nas&#305;l..? Hile mi yap&#305;yosun??&quot;"/>
+                                                                                            <assign variable="str[4]" expression="&quot;[&#8258;] Elon Musk falan m&#305;s&#305;n? Nas&#305;l bu kadar &#231;abuk bildin?&quot;"/>
+                                                                                            <assign variable="payload" expression="str[Random(5)]"/>
+                                                                                        </then>
+                                                                                        <else>
+                                                                                            <if expression="type == &quot;lose&quot;">
+                                                                                                <then>
+                                                                                                    <assign variable="str[0]" expression="&quot;[-] &#220;zg&#252;n&#252;m, Oyunu Kaybettiniz.&quot;"/>
+                                                                                                    <assign variable="str[1]" expression="&quot;[-] Malesef oyunu kaybettin. Belkide sadece &#351;anss&#305;z zaman&#305;ndas&#305;n..&quot;"/>
+                                                                                                    <assign variable="str[2]" expression="&quot;[-] Ah be abi.. Asl&#305;nda kolay bir say&#305; tutmu&#351;tum. &#220;z&#252;lme tekraradan oynayabilirsin.&quot;"/>
+                                                                                                    <assign variable="str[3]" expression="&quot;[-] &#220;z&#252;lerek belirtmek isterim ki, oyunu kaybetttin. Verilen 10 hak i&#231;erisinden, say&#305;y&#305; tahmin etmeyi ba&#351;aramad&#305;n.&quot;"/>
+                                                                                                    <assign variable="str[4]" expression="&quot;[-] &#220;z&#252;lme, her son bir ba&#351;lang&#305;&#231;t&#305;r. Kaybetmen birdahaki sefere kazanamayaca&#287;&#305;n anlam&#305;na gelmez..&quot;"/>
+                                                                                                    <assign variable="payload" expression="str[Random(5)]"/>
+                                                                                                </then>
+                                                                                                <else>
+                                                                                                    <if expression="type == &quot;cold&quot;">
+                                                                                                        <then>
+                                                                                                            <assign variable="str[0]" expression="&quot;&#8600;                &#8601;&quot; &amp; ToChar(13) &amp; &quot; So&#287;uk&quot; &amp; ToChar(13) &amp; &quot;&#8599;                &#8598;&quot;"/>
+                                                                                                            <assign variable="payload" expression="str[0]"/>
+                                                                                                        </then>
+                                                                                                        <else>
+                                                                                                            <if expression="type == &quot;warm&quot;">
+                                                                                                                <then>
+                                                                                                                    <assign variable="str[0]" expression="&quot;&#8600;                &#8601;&quot; &amp; ToChar(13) &amp; &quot;  Il&#305;k&quot; &amp; ToChar(13) &amp; &quot;&#8599;                &#8598;&quot;"/>
+                                                                                                                    <assign variable="payload" expression="str[0]"/>
+                                                                                                                </then>
+                                                                                                                <else>
+                                                                                                                    <if expression="type == &quot;hot&quot;">
+                                                                                                                        <then>
+                                                                                                                            <assign variable="str[0]" expression="&quot;&#8600;                &#8601;&quot; &amp; ToChar(13) &amp; &quot; S&#305;cak&quot; &amp; ToChar(13) &amp; &quot;&#8599;                &#8598;&quot;"/>
+                                                                                                                            <assign variable="payload" expression="str[0]"/>
+                                                                                                                        </then>
+                                                                                                                        <else>
+                                                                                                                            <if expression="type == &quot;info&quot;">
+                                                                                                                                <then>
+                                                                                                                                    <assign variable="str[0]" expression="&quot;Oyunun temellerinde &#231;ok basit fonksiyonlar ve d&#252;zenlemeler yatmaktad&#305;r.&quot;"/>
+                                                                                                                                    <assign variable="str[1]" expression="&quot;Oyun &#246;nce sizden ad&#305;n&#305;z&#305; ister. Baz&#305; durumlarda bunu kullanabilir.&quot;"/>
+                                                                                                                                    <assign variable="str[2]" expression="&quot;&#304;sim i&#231;in gereken kriterler sadece 3 harf veya daha fazla olmas&#305;d&#305;r.&quot;"/>
+                                                                                                                                    <assign variable="str[3]" expression="&quot;Ard&#305;ndan oyun hakk&#305;nda bilgilendirme mesaj&#305; g&#246;nderilir.&quot;"/>
+                                                                                                                                    <assign variable="str[4]" expression="&quot;Mesajlar logger() denilen fonksiyon ile g&#246;nderilir. Bunu incelemek i&#231;in &#252;stteki 'Ana' yazan yere bas&#305;p 'logger' se&#231;melisiniz.&quot;"/>
+                                                                                                                                    <assign variable="str[5]" expression="&quot;Daha sonra ise oyun modu se&#231;imi ekran&#305; gelecektir. Burda 2 farkl&#305; oyun modunu se&#231;ebilirsiniz. Kolay veya Zor.&quot;"/>
+                                                                                                                                    <assign variable="str[6]" expression="&quot;Her iki oyun modunda &#246;nce bilgilendirme mesaj&#305;, ard&#305;ndan ise oyunun ba&#351;lad&#305;&#287;&#305;na dair ufak bir mesaj g&#246;nderilir.&quot;"/>
+                                                                                                                                    <assign variable="str[7]" expression="&quot;Kolay oyun modunda basit&#231;e so&#287;uk-s&#305;cak oyunu mant&#305;&#287;&#305; yatar. Say&#305;, tahmine yak&#305;nsa so&#287;uk, de&#287;ilse s&#305;cak denilir.&quot;"/>
+                                                                                                                                    <assign variable="str[8]" expression="&quot;Normal oyun modunda ise y&#246;nergeler veya yard&#305;m yoktur. Kullan&#305;c&#305; tamamen i&#231;g&#252;d&#252;leri ile tahmin etmeye &#231;al&#305;&#351;&#305;r.&quot;"/>
+                                                                                                                                    <assign variable="str[9]" expression="&quot;Tahmin do&#287;ru oldu&#287;unda son olarak tebrik mesaj&#305; g&#246;nderilir. Yanl&#305;&#351; ise oyunun bitti&#287;ine dair bir mesaj ile birlikte tekrar oynamak i&#231;in sorulur.&quot;"/>
+                                                                                                                                    <assign variable="payload" expression="str[ToInteger(arg)]"/>
+                                                                                                                                </then>
+                                                                                                                                <else/>
+                                                                                                                            </if>
+                                                                                                                        </else>
+                                                                                                                    </if>
+                                                                                                                </else>
+                                                                                                            </if>
+                                                                                                        </else>
+                                                                                                    </if>
+                                                                                                </else>
+                                                                                            </if>
+                                                                                        </else>
+                                                                                    </if>
+                                                                                </else>
+                                                                            </if>
+                                                                        </else>
+                                                                    </if>
+                                                                </else>
+                                                            </if>
+                                                        </else>
+                                                    </if>
+                                                </else>
+                                            </if>
+                                        </else>
+                                    </if>
+                                </else>
+                            </if>
+                        </else>
+                    </if>
+                </else>
+            </if>
+            <comment text="prototip =&gt; plugins(&lt;str&gt;, &lt;str&gt;)   &#13;&#10;&#214;rnek: &#13;&#10;plugins(&quot;ask name&quot;, &quot; &quot;)  &#13;&#10;plugins(&quot;after name&quot;, &quot;&#304;sim&quot;)  &#13;&#10;"/>
+        </body>
+    </function>
+    <function name="rand" type="Integer" variable="payload">
+        <parameters>
+            <parameter name="type" type="Boolean" array="False"/>
+        </parameters>
+        <body>
+            <declare name="payload, opt, num" type="Integer" array="False" size=""/>
+            <declare name="index" type="Integer" array="True" size="101"/>
+            <comment text="100 yerine 101 kullanmam&#305;z&#305;n nedeni array'lar&#305;n (dizin) 0. konumdan ba&#351;lamas&#305;d&#305;r.&#13;&#10;&#13;&#10;var dizin = [&quot;bir&quot;, &quot;iki&quot;, &quot;&#252;&#231;&quot;]   &#13;&#10;return dizin[0]     // &quot;bir&quot;"/>
+            <if expression="!type">
+                <then>
+                    <assign variable="payload" expression="Random(101)"/>
+                    <comment text="De&#287;i&#351;ken kontrol&#252; istemeyenler i&#231;in altyap&#305;s&#305; while ile kurulu (flowgorithm i&#231;inde varsay&#305;lan olarak bulunur) Random fonksiyonu."/>
+                    <comment text="De&#287;i&#351;ken kontrol&#252; i&#231;in;  &#13;&#10;rand(true)    &#13;&#10;&#13;&#10;Direk i&#351;lem i&#231;in;  &#13;&#10;rand(false)   &#13;&#10;&#13;&#10;kullan&#305;n."/>
+                    <if expression="payload == 0">
+                        <then>
+                            <call expression="rand(false)"/>
+                        </then>
+                        <else/>
+                    </if>
+                </then>
+                <else>
+                    <comment text="Bu k&#305;s&#305;m de&#287;i&#351;ken kontrol&#252; yapmak isteyenler i&#231;indir."/>
+                    <assign variable="num" expression="0"/>
+                    <do expression="num &lt; 101">
+                        <assign variable="index[num]" expression="num"/>
+                        <assign variable="num" expression="num + 1"/>
+                    </do>
+                    <comment text="do d&#246;ng&#252;s&#252; kullan&#305;l&#305;r."/>
+                    <assign variable="opt" expression="Random(101)"/>
+                    <assign variable="payload" expression="index[opt]"/>
+                    <if expression="payload == 0">
+                        <then>
+                            <call expression="rand(true)"/>
+                        </then>
+                        <else/>
+                    </if>
+                </else>
+            </if>
+            <comment text="&#304;ndexler 0'a e&#351;it olursa, sistem otomatik olarak ba&#351;a d&#246;ner ve say&#305; tekrardan kar&#305;&#351;t&#305;r&#305;l&#305;r."/>
+            <comment text="&#199;&#305;k&#305;&#351; int (Tamsay&#305;) olarak d&#246;ner."/>
+        </body>
+    </function>
+</flowgorithm>

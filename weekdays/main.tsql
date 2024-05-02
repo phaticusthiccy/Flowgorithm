@@ -1,0 +1,66 @@
+﻿CREATE PROCEDURE Main()
+BEGIN
+    DECLARE @Sync BIT;
+    
+    SET @Sync = True;
+    DECLARE @var_İndex INT;
+    DECLARE @İndex2 INT;
+    
+    SET @var_İndex = 0;
+    SET @İndex2 = 0;
+    DECLARE @Günler TABLE (Index INT, Element VARCHAR)
+    
+    DELETE FROM @Günler WHERE Index = 0;
+    INSERT INTO @Günler (Index, Element) VALUES (0, 'Pazartesi');
+    DELETE FROM @Günler WHERE Index = 1;
+    INSERT INTO @Günler (Index, Element) VALUES (1, 'Salı');
+    DELETE FROM @Günler WHERE Index = 2;
+    INSERT INTO @Günler (Index, Element) VALUES (2, 'Çarşamba');
+    DELETE FROM @Günler WHERE Index = 3;
+    INSERT INTO @Günler (Index, Element) VALUES (3, 'Perşembe');
+    DELETE FROM @Günler WHERE Index = 4;
+    INSERT INTO @Günler (Index, Element) VALUES (4, 'Cuma');
+    DELETE FROM @Günler WHERE Index = 5;
+    INSERT INTO @Günler (Index, Element) VALUES (5, 'Cumartesi');
+    DELETE FROM @Günler WHERE Index = 6;
+    INSERT INTO @Günler (Index, Element) VALUES (6, 'Pazar');
+    WHILE (@Sync)
+    BEGIN
+        IF (@var_İndex = 7)
+        BEGIN
+        END
+        ELSE
+        BEGIN
+            SET @var_İndex = @var_İndex + 1;
+            EXECUTE Output 'Haftanın ' + CAST(@var_İndex AS VARCHAR) + '. Günü: ' + (SELECT Value FROM @Günler WHERE Index = @İndex2);
+            EXECUTE Delay 1;
+            
+            -- Çıktı 1 saniye süreyle atılır.
+            SET @İndex2 = @İndex2 + 1;
+        END
+    END
+END;
+
+CREATE FUNCTION Delay (INT Sn)
+RETURNS BIT
+BEGIN
+    DECLARE @Sonuc BIT;
+    DECLARE @Ms INT;
+    
+    SET @Ms = @Sn * 33333;
+    DECLARE @n INT;
+    
+    SET @n = 0;
+    WHILE (@n != @Ms)
+    BEGIN
+        SET @n = @n + 1;
+    END
+    SET @Sonuc = True;
+    
+    RETURN Sonuc;
+END;
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;

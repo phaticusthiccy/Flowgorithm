@@ -1,0 +1,720 @@
+﻿DECLARE @InputCursor CURSOR GLOBAL;
+
+CREATE PROCEDURE Main()
+BEGIN
+    EXECUTE InitInput;
+
+    DECLARE @Sync BIT;
+    
+    SET @Sync = True;
+    DECLARE @Secim VARCHAR;
+    DECLARE @var_İndex INT;
+    DECLARE @İndex2 INT;
+    
+    SET @var_İndex = 0;
+    SET @İndex2 = 0;
+    DECLARE @Notlar TABLE (Index INT, Element INT)
+    DECLARE @Eskinotlar TABLE (Index INT, Element INT)
+    DECLARE @Otonot TABLE (Index INT, Element INT)
+    DECLARE @Otoeklenennot TABLE (Index INT, Element VARCHAR)
+    
+    EXECUTE Output 'Notlar Otomatik mi Belirlensin Yoksa Manuel Mi?' + CHAR(13) + CHAR(13) + 'Otomatik için: ''O''' + CHAR(13) + 'Manuel için: ''M''' + CHAR(13) + 'Yazın' + CHAR(13) + CHAR(13) + 'Arayüz Hakkında Bilgi Almak İçin İse ''A'' Yazın';
+    SET @Secim = Input();
+    IF (@Secim = 'O' OR @Secim = 'o')
+    BEGIN
+        WHILE (@Sync)
+        BEGIN
+            
+            -- Bu döngü notları belirler.
+            IF (@var_İndex = 5)
+            BEGIN
+                SET @Sync = False;
+                
+                -- index 5'e ulaştığında sync (boolen) false olarak ayarla. Bu while dögüsünü durdurscaktır.
+            END
+            ELSE
+            BEGIN
+                SET @var_İndex = @var_İndex + 1;
+                DELETE FROM @Notlar WHERE Index = @İndex2;
+                INSERT INTO @Notlar (Index, Element) VALUES (@İndex2, INT(RAND() * 80));
+                
+                -- Random sayı belirle
+                SET @İndex2 = @İndex2 + 1;
+                
+                -- 0 ve 80 arasında 5 adet sayı belirle ve dizine (array) kaydet
+            END
+        END
+        SET @Sync = True;
+        SET @var_İndex = 0;
+        SET @İndex2 = 0;
+        
+        -- Değişkenleri sıfırlayalım
+        WHILE (@Sync)
+        BEGIN
+            
+            -- Bu döngü eski notları kaydeder ve yeni notlara 20 puan ekler.
+            IF (@var_İndex = 5)
+            BEGIN
+                SET @Sync = False;
+            END
+            ELSE
+            BEGIN
+                SET @var_İndex = @var_İndex + 1;
+                DELETE FROM @Eskinotlar WHERE Index = @İndex2;
+                INSERT INTO @Eskinotlar (Index, Element) VALUES (@İndex2, (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                DELETE FROM @Notlar WHERE Index = @İndex2;
+                INSERT INTO @Notlar (Index, Element) VALUES (@İndex2, (SELECT Value FROM @Notlar WHERE Index = @İndex2) + 20);
+                SET @İndex2 = @İndex2 + 1;
+            END
+        END
+        SET @Sync = True;
+        SET @var_İndex = 0;
+        SET @İndex2 = 0;
+        
+        -- Değişkenleri sıfırlayalım
+        EXECUTE Output 'Yeni Notlar:';
+        WHILE (@Sync)
+        BEGIN
+            
+            -- Bu döngü eski ve yeni notları bir arada yazdırır.
+            IF (@var_İndex = 5)
+            BEGIN
+                SET @Sync = False;
+                
+                -- Kırılma Noktası Kullanmak Yerine Döngüyü Kapatalım
+            END
+            ELSE
+            BEGIN
+                SET @var_İndex = @var_İndex + 1;
+                EXECUTE Output CAST(@var_İndex AS VARCHAR) + '. Öğrencinin; ' + CHAR(13) + CHAR(13) + 'Eski Not: ' + (SELECT Value FROM @Eskinotlar WHERE Index = @İndex2) + CHAR(13) + 'Yeni Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                EXECUTE Delay 500;
+                
+                -- 500 Milisaniyelik Gecikme
+                SET @İndex2 = @İndex2 + 1;
+            END
+        END
+    END
+    ELSE
+    BEGIN
+        IF (@Secim = 'M' OR @Secim = 'm')
+        BEGIN
+            EXECUTE Output '1. Öğrencinin Notunu Giriniz: ';
+            DELETE FROM @Notlar WHERE Index = 0;
+            INSERT INTO @Notlar (Index, Element) VALUES (0, Input());
+            EXECUTE Output '2. Öğrencinin Notunu Giriniz: ';
+            DELETE FROM @Notlar WHERE Index = 1;
+            INSERT INTO @Notlar (Index, Element) VALUES (1, Input());
+            EXECUTE Output '3. Öğrencinin Notunu Giriniz: ';
+            DELETE FROM @Notlar WHERE Index = 2;
+            INSERT INTO @Notlar (Index, Element) VALUES (2, Input());
+            EXECUTE Output '4. Öğrencinin Notunu Giriniz: ';
+            DELETE FROM @Notlar WHERE Index = 3;
+            INSERT INTO @Notlar (Index, Element) VALUES (3, Input());
+            EXECUTE Output '5. Öğrencinin Notunu Giriniz: ';
+            DELETE FROM @Notlar WHERE Index = 4;
+            INSERT INTO @Notlar (Index, Element) VALUES (4, Input());
+            EXECUTE Delay 800;
+            DECLARE @Secim2 INT;
+            DECLARE @Devam BIT;
+            
+            SET @Devam = True;
+            SET @var_İndex = 0;
+            SET @İndex2 = 0;
+            WHILE (@Sync)
+            BEGIN
+                IF (@var_İndex = 5)
+                BEGIN
+                    SET @Sync = False;
+                END
+                ELSE
+                BEGIN
+                    SET @var_İndex = @var_İndex + 1;
+                    IF ((SELECT Value FROM @Notlar WHERE Index = @İndex2) > 100)
+                    BEGIN
+                        SET @Sync = False;
+                        SET @Devam = False;
+                    END
+                    ELSE
+                    BEGIN
+                        IF ((SELECT Value FROM @Notlar WHERE Index = @İndex2) < 0)
+                        BEGIN
+                            SET @Sync = False;
+                            SET @Devam = False;
+                        END
+                        ELSE
+                        BEGIN
+                            SET @İndex2 = @İndex2 + 1;
+                        END
+                    END
+                END
+            END
+            IF (NOT @Devam)
+            BEGIN
+                EXECUTE Output 'Notlar 100 ve 0 Arasında Olmalıdır.';
+            END
+            ELSE
+            BEGIN
+                EXECUTE Output 'Size 3 Seçenek Sunuyoruz:' + CHAR(13) + CHAR(13) + '1) Herkesin Notuna +20 Puan Ekle' + CHAR(13) + '2) Herkesin Notuna Eklenecek Puanı Manuel Gir' + CHAR(13) + '3) Sistem''in Kendi Not Ekleme Aracını Kullan';
+                SET @Secim2 = Input();
+                IF (@Secim2 = 3)
+                BEGIN
+                    EXECUTE Delay 59;
+                    SET @var_İndex = 0;
+                    SET @İndex2 = 0;
+                    SET @Sync = True;
+                    WHILE (@Sync)
+                    BEGIN
+                        IF (@var_İndex = 5)
+                        BEGIN
+                            SET @Sync = False;
+                        END
+                        ELSE
+                        BEGIN
+                            SET @var_İndex = @var_İndex + 1;
+                            DELETE FROM @Otoeklenennot WHERE Index = @İndex2;
+                            INSERT INTO @Otoeklenennot (Index, Element) VALUES (@İndex2, Puanekle((SELECT Value FROM @Notlar WHERE Index = @İndex2)));
+                            
+                            -- Eklenen puanı dizine yazar. Bunu tamsayıya çevirmeye gerek yoktur. Çıkış da kullanacağımız için string olarak kalabilir.
+                            EXECUTE Delay 59;
+                            IF ((SELECT Value FROM @Otoeklenennot WHERE Index = @İndex2) = 'pass')
+                            BEGIN
+                                DELETE FROM @Otoeklenennot WHERE Index = @İndex2;
+                                INSERT INTO @Otoeklenennot (Index, Element) VALUES (@İndex2, '0');
+                            END
+                            ELSE
+                            BEGIN
+                                DELETE FROM @Otonot WHERE Index = @İndex2;
+                                INSERT INTO @Otonot (Index, Element) VALUES (@İndex2, (SELECT Value FROM @Notlar WHERE Index = @İndex2) + CAST(Puanekle((SELECT Value FROM @Notlar WHERE Index = @İndex2)) AS INT));
+                            END
+                            SET @İndex2 = @İndex2 + 1;
+                        END
+                    END
+                    SET @var_İndex = 0;
+                    SET @İndex2 = 0;
+                    SET @Sync = True;
+                    WHILE (@Sync)
+                    BEGIN
+                        IF (@var_İndex = 5)
+                        BEGIN
+                            SET @Sync = False;
+                        END
+                        ELSE
+                        BEGIN
+                            SET @var_İndex = @var_İndex + 1;
+                            DECLARE @Cikti VARCHAR;
+                            
+                            IF ((SELECT Value FROM @Otoeklenennot WHERE Index = @İndex2) = '0')
+                            BEGIN
+                                SET @Cikti = CAST(@var_İndex AS VARCHAR) + '. Öğrencinin; ' + CHAR(13) + CHAR(13) + 'Eski Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2) + CHAR(13) + 'Yeni Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2) + CHAR(13) + 'Ek Puan Yok. Not Yeterli.';
+                            END
+                            ELSE
+                            BEGIN
+                                SET @Cikti = CAST(@var_İndex AS VARCHAR) + '. Öğrencinin; ' + CHAR(13) + CHAR(13) + 'Eski Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2) + CHAR(13) + 'Yeni Not: ' + (CAST((SELECT Value FROM @Otoeklenennot WHERE Index = @İndex2) AS INT) + (SELECT Value FROM @Notlar WHERE Index = @İndex2)) + CHAR(13) + 'Eklenen Puan: ' + (SELECT Value FROM @Otoeklenennot WHERE Index = @İndex2);
+                            END
+                            EXECUTE Output @Cikti;
+                            EXECUTE Delay 500;
+                            SET @İndex2 = @İndex2 + 1;
+                        END
+                    END
+                END
+                ELSE
+                BEGIN
+                    IF (@Secim2 = 2)
+                    BEGIN
+                        SET @var_İndex = 0;
+                        SET @İndex2 = 0;
+                        SET @Sync = False;
+                        DECLARE @Sayı1 INT;
+                        DECLARE @Sayı2 INT;
+                        DECLARE @Sayı3 INT;
+                        DECLARE @Sayı4 INT;
+                        DECLARE @Sayı5 INT;
+                        DECLARE @Soru1 INT;
+                        DECLARE @Soru2 INT;
+                        DECLARE @Soru3 INT;
+                        DECLARE @Soru4 INT;
+                        DECLARE @Soru5 INT;
+                        
+                        -- Dizin Kullanılamaz. Flowgorithm Komplex Sistemlerde Dögü İçinden Dizine Veri Aktarmaya İzin Vermez.
+                        -- Yaha henüz ben keşfedemedim :p
+                        EXECUTE Delay 230;
+                        SET @Soru1 = Puaneklesoru('1', (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                        SET @İndex2 = @İndex2 + 1;
+                        SET @Soru2 = Puaneklesoru('2', (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                        SET @İndex2 = @İndex2 + 1;
+                        SET @Soru3 = Puaneklesoru('3', (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                        SET @İndex2 = @İndex2 + 1;
+                        SET @Soru4 = Puaneklesoru('4', (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                        SET @İndex2 = @İndex2 + 1;
+                        SET @Soru5 = Puaneklesoru('5', (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                        EXECUTE Delay 600;
+                        SET @Sync = True;
+                        DECLARE @Soruarray TABLE (Index INT, Element INT)
+                        
+                        DELETE FROM @Soruarray WHERE Index = 0;
+                        INSERT INTO @Soruarray (Index, Element) VALUES (0, @Soru1);
+                        DELETE FROM @Soruarray WHERE Index = 1;
+                        INSERT INTO @Soruarray (Index, Element) VALUES (1, @Soru2);
+                        DELETE FROM @Soruarray WHERE Index = 2;
+                        INSERT INTO @Soruarray (Index, Element) VALUES (2, @Soru3);
+                        DELETE FROM @Soruarray WHERE Index = 3;
+                        INSERT INTO @Soruarray (Index, Element) VALUES (3, @Soru4);
+                        DELETE FROM @Soruarray WHERE Index = 4;
+                        INSERT INTO @Soruarray (Index, Element) VALUES (4, @Soru5);
+                        IF (@Soru1 > 100 AND @Soru1 < 0 OR @Soru2 > 100 AND @Soru2 < 0 OR @Soru3 > 100 AND @Soru3 < 0 OR @Soru4 > 100 AND @Soru4 < 0 OR @Soru5 > 100 AND @Soru5 < 0)
+                        BEGIN
+                            EXECUTE Output 'Notların Son Hali 100 ve 0 Arasında Olmalıdır.';
+                        END
+                        ELSE
+                        BEGIN
+                            SET @İndex2 = 0;
+                            SET @Sayı1 = @Soru1 + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                            SET @İndex2 = @İndex2 + 1;
+                            SET @Sayı2 = @Soru2 + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                            SET @İndex2 = @İndex2 + 1;
+                            SET @Sayı3 = @Soru3 + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                            SET @İndex2 = @İndex2 + 1;
+                            SET @Sayı4 = @Soru4 + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                            SET @İndex2 = @İndex2 + 1;
+                            SET @Sayı5 = @Soru5 + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                            SET @İndex2 = 0;
+                            SET @var_İndex = 0;
+                            DECLARE @Sonsayılar TABLE (Index INT, Element INT)
+                            
+                            DELETE FROM @Sonsayılar WHERE Index = 0;
+                            INSERT INTO @Sonsayılar (Index, Element) VALUES (0, @Sayı1);
+                            DELETE FROM @Sonsayılar WHERE Index = 1;
+                            INSERT INTO @Sonsayılar (Index, Element) VALUES (1, @Sayı2);
+                            DELETE FROM @Sonsayılar WHERE Index = 2;
+                            INSERT INTO @Sonsayılar (Index, Element) VALUES (2, @Sayı3);
+                            DELETE FROM @Sonsayılar WHERE Index = 3;
+                            INSERT INTO @Sonsayılar (Index, Element) VALUES (3, @Sayı4);
+                            DELETE FROM @Sonsayılar WHERE Index = 4;
+                            INSERT INTO @Sonsayılar (Index, Element) VALUES (4, @Sayı5);
+                            WHILE (@Sync)
+                            BEGIN
+                                IF (@var_İndex = 5)
+                                BEGIN
+                                    SET @Sync = False;
+                                END
+                                ELSE
+                                BEGIN
+                                    SET @var_İndex = @var_İndex + 1;
+                                    EXECUTE Output CAST(@var_İndex AS VARCHAR) + '. Öğrencinin; ' + CHAR(13) + CHAR(13) + 'Eski Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2) + CHAR(13) + 'Yeni Not: ' + (SELECT Value FROM @Sonsayılar WHERE Index = @İndex2) + CHAR(13) + 'Eklenen Puan: ' + (SELECT Value FROM @Soruarray WHERE Index = @İndex2);
+                                    EXECUTE Delay 270;
+                                    SET @İndex2 = @İndex2 + 1;
+                                END
+                            END
+                        END
+                    END
+                    ELSE
+                    BEGIN
+                        IF (@Secim2 = 1)
+                        BEGIN
+                            WHILE (@Sync)
+                            BEGIN
+                                
+                                -- Bu döngü notları belirler.
+                                IF (@var_İndex = 5)
+                                BEGIN
+                                    SET @Sync = False;
+                                    
+                                    -- index 5'e ulaştığında sync (boolen) false olarak ayarla. Bu while dögüsünü durdurscaktır.
+                                END
+                                ELSE
+                                BEGIN
+                                    SET @var_İndex = @var_İndex + 1;
+                                    DELETE FROM @Notlar WHERE Index = @İndex2;
+                                    INSERT INTO @Notlar (Index, Element) VALUES (@İndex2, INT(RAND() * 80));
+                                    
+                                    -- Random sayı belirle
+                                    SET @İndex2 = @İndex2 + 1;
+                                    
+                                    -- 0 ve 80 arasında 5 adet sayı belirle ve dizine (array) kaydet
+                                END
+                            END
+                            SET @Sync = True;
+                            SET @var_İndex = 0;
+                            SET @İndex2 = 0;
+                            
+                            -- Değişkenleri sıfırlayalım
+                            WHILE (@Sync)
+                            BEGIN
+                                
+                                -- Bu döngü eski notları kaydeder ve yeni notlara 20 puan ekler.
+                                IF (@var_İndex = 5)
+                                BEGIN
+                                    SET @Sync = False;
+                                END
+                                ELSE
+                                BEGIN
+                                    SET @var_İndex = @var_İndex + 1;
+                                    DELETE FROM @Eskinotlar WHERE Index = @İndex2;
+                                    INSERT INTO @Eskinotlar (Index, Element) VALUES (@İndex2, (SELECT Value FROM @Notlar WHERE Index = @İndex2));
+                                    DELETE FROM @Notlar WHERE Index = @İndex2;
+                                    INSERT INTO @Notlar (Index, Element) VALUES (@İndex2, (SELECT Value FROM @Notlar WHERE Index = @İndex2) + 20);
+                                    SET @İndex2 = @İndex2 + 1;
+                                END
+                            END
+                            SET @Sync = True;
+                            SET @var_İndex = 0;
+                            SET @İndex2 = 0;
+                            
+                            -- Değişkenleri sıfırlayalım
+                            EXECUTE Output 'Yeni Notlar:';
+                            WHILE (@Sync)
+                            BEGIN
+                                
+                                -- Bu döngü eski ve yeni notları bir arada yazdırır.
+                                IF (@var_İndex = 5)
+                                BEGIN
+                                    SET @Sync = False;
+                                    
+                                    -- Kırılma Noktası Kullanmak Yerine Döngüyü Kapatalım
+                                END
+                                ELSE
+                                BEGIN
+                                    SET @var_İndex = @var_İndex + 1;
+                                    IF ((SELECT Value FROM @Notlar WHERE Index = @İndex2) > 100)
+                                    BEGIN
+                                        DELETE FROM @Notlar WHERE Index = @İndex2;
+                                        INSERT INTO @Notlar (Index, Element) VALUES (@İndex2, 100);
+                                        EXECUTE Output CAST(@var_İndex AS VARCHAR) + '. Öğrencinin; ' + CHAR(13) + CHAR(13) + 'Eski Not: ' + (SELECT Value FROM @Eskinotlar WHERE Index = @İndex2) + CHAR(13) + 'Yeni Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                                    END
+                                    ELSE
+                                    BEGIN
+                                        EXECUTE Output CAST(@var_İndex AS VARCHAR) + '. Öğrencinin; ' + CHAR(13) + CHAR(13) + 'Eski Not: ' + (SELECT Value FROM @Eskinotlar WHERE Index = @İndex2) + CHAR(13) + 'Yeni Not: ' + (SELECT Value FROM @Notlar WHERE Index = @İndex2);
+                                    END
+                                    
+                                    -- 20 Puan Ekleme Sonrası Notu 100 ve Yukarısında Olanların Notu Otomatik 100 olarak sayılacaktır.
+                                    EXECUTE Delay 500;
+                                    
+                                    -- 500 Milisaniyelik Gecikme
+                                    SET @İndex2 = @İndex2 + 1;
+                                END
+                            END
+                        END
+                        ELSE
+                        BEGIN
+                            EXECUTE Output 'Lütfen 1, 2 veya 3 yazınız.';
+                            EXECUTE Delay 1000;
+                            EXECUTE Output 'Program Kapatılıyor..';
+                            SET @var_İndex = 3;
+                            WHILE (@Sync)
+                            BEGIN
+                                IF (@var_İndex = 0)
+                                BEGIN
+                                    SET @Sync = False;
+                                END
+                                ELSE
+                                BEGIN
+                                    EXECUTE Delay 1000;
+                                    EXECUTE Output CAST(@var_İndex AS VARCHAR) + '..';
+                                    SET @var_İndex = @var_İndex - 1;
+                                END
+                                
+                                -- Programın Kapatılması İçin Sayaç Oluştur
+                            END
+                        END
+                    END
+                END
+            END
+        END
+        ELSE
+        BEGIN
+            DECLARE @Helpnum INT;
+            DECLARE @Helpnum2 INT;
+            DECLARE @Loop INT;
+            DECLARE @Loop2 INT;
+            
+            IF (@Secim = 'a' OR @Secim = 'A')
+            BEGIN
+                EXECUTE Output '1) Otomatik Mod Hakkında Yardım' + CHAR(13) + '2) Manuel Mod Hakkında Yardım';
+                SET @Helpnum = Input();
+                EXECUTE Delay 200;
+                
+                -- Bekleme Süreleri İşlemi Yavaşlatabilir Fakat Değişken Atamayı Sorunsuz Bir Şekilde Halletmenize Yarar.
+                SET @Loop = Yardımloop(@Helpnum);
+                EXECUTE Delay 200;
+                IF (@Loop = 1)
+                BEGIN
+                    EXECUTE Output 'Bu Mod İçersinde Bulunan Random(n) komutu, girilen değer ile 0 arasında rastgele sayı seçmemize yarar.';
+                    EXECUTE Delay 7800;
+                    EXECUTE Output 'Seçilen rastgele sayılar not olarak dizin şeklinde kaydedilir. Ardından while döngüsü ile tüm dizin objelerine +20 olarak ekleme yapılır.';
+                    EXECUTE Delay 9000;
+                    EXECUTE Output 'Ardından ilk notlar ve ekleme sonrasındaki notlar yine bir while döngüsü ile teker teker yazdırılır.';
+                END
+                ELSE
+                BEGIN
+                    EXECUTE Output '1) Tüm Notlara 20 Puan Ekleme Hakkında Yardım' + CHAR(13) + '2) Manuel Puan Ekleme Hakkında Yardım' + CHAR(13) + '3) Sistemin Belirlediği Ek Puan Modülü Hakkında Yardım';
+                    SET @Helpnum2 = Input();
+                    EXECUTE Delay 200;
+                    SET @Loop2 = Yardımloop2(@Helpnum2);
+                    EXECUTE Delay 200;
+                    IF (@Loop2 = 1)
+                    BEGIN
+                        EXECUTE Output 'Bu Sistem Otomatik Mod İle Aynı Çalışır. Tek farkı, öğrenci notlarını kullanıcı girer. Ardından girilen tüm nolara +20 puan ekler.';
+                    END
+                    ELSE
+                    BEGIN
+                        IF (@Loop2 = 2)
+                        BEGIN
+                            EXECUTE Output 'Bu sistemde notlar, kullanıcı tarafından belirlendikten sonra program her öğrencinin notuna eklenecek puan için kullanıcıya tekrar soru sorar.';
+                            EXECUTE Delay 7800;
+                            EXECUTE Output 'Girilen değerler test edilir, yanlışlar ve uyuşmazlıklar düzeltilir. En sonda ise yine bir while döngüsü ile tüm notlar yazdırılır.';
+                        END
+                        ELSE
+                        BEGIN
+                            EXECUTE Output 'Kullanıcı notları girdikten sonra dizine kaydedilir. Ardından puanekle() fonksiyonuna veri aktarımı yapılır.';
+                            EXECUTE Delay 4500;
+                            EXECUTE Output 'Fonksiyona gelen veriler önce gruplara ayrılır. Burda belirli bir not aralığı kullanılır.';
+                            EXECUTE Delay 4500;
+                            EXECUTE Output 'Gruplandırılan notlar, sistemin içinde bulunan ek puan ekleme, yani çok düşük notları bile adaletli olarak yükselten, yüksek notları ise yerinde düzeltme yapar.';
+                            EXECUTE Delay 8000;
+                            EXECUTE Output 'Yeni notlar belirlendiğinde kapsamlı bir çıktı olarak, tekrardan while döngüsü ile prompt''a (ekrana) yazdırılır.';
+                        END
+                    END
+                END
+            END
+            ELSE
+            BEGIN
+                EXECUTE Output 'Lütfen Sadece ''M'' veya ''O'' Harflerini Giriniz!';
+            END
+        END
+    END
+    
+    -- 2 Ana Seçenek Altında Toplam 4 Farklı İşlem Yapılır.
+    -- 
+    -- Otomatik: Öğrencilerin notları 0-80 arası rastgele seçilir. Ardından Tüm Öğrencilere 20 puan eklenir.
+    -- Manuel Modunda İse 3 Ayrı İşlem Yapılır. Ek Olarak Öğrencilerin Notunu Kullanıcı Seçer.
+    -- 
+    -- 1. İşlem: Seçilen Notların Hepine 20 Puan Ekle
+    -- 2. İşlem: Eklenecek Puanları Kullanıcı Kendisi Belirler
+    -- 3. İşlem: Sistem Not Ağırlığına Göre Otomatik Bir Şekilde Ekleme Yapar.
+    -- 
+    -- 3. İşlemdeki öncelik, düşük notlara olabildiğince fazla ek puan verip, daha yüksek notları ise en ideal şekide ayarlamaktır. Bu işlem hem zaman tasarrufu hem de, eklenen puanların tutarlılığı için mükemmel bir yöntemdir.
+END;
+
+CREATE FUNCTION Delay (INT Sn)
+RETURNS BIT
+BEGIN
+    -- Flowgorithm üzerinde setTimeout veya time.sleep() gibi komutlar olmadığı için gecikmeyi (delay) bu şekilde sağlarız.
+    DECLARE @Sonuc BIT;
+    DECLARE @Ms INT;
+    
+    SET @Ms = @Sn * 33;
+    DECLARE @n INT;
+    
+    SET @n = 0;
+    WHILE (@n != @Ms)
+    BEGIN
+        SET @n = @n + 1;
+    END
+    SET @Sonuc = True;
+    
+    -- Response (çıktı) herhangi bir değer olabilir. Bunun önemi yoktur. True dönmesi, konrol eden kişi değşken ile atadığında timer kapandıktan sonra değişken true halini alır.
+    -- boolen test
+    -- test = delay(200)
+    -- çıktı test  // true
+    
+    RETURN Sonuc;
+END;
+
+CREATE FUNCTION Puanekle (INT Puan)
+RETURNS VARCHAR
+BEGIN
+    DECLARE @Sonuc VARCHAR;
+    DECLARE @Ekpuan TABLE (Index INT, Element INT)
+    DECLARE @var_İndex INT;
+    DECLARE @İndex2 INT;
+    DECLARE @Sync BIT;
+    
+    -- while döngüsü için
+    SET @Sync = True;
+    SET @var_İndex = 0;
+    IF (@Puan > 89)
+    BEGIN
+        SET @Sonuc = 'pass';
+        
+        -- 90 ve üstü notlar için puan ekleme olmaz.
+    END
+    ELSE
+    BEGIN
+        IF (@Puan > 69)
+        BEGIN
+            SET @İndex2 = 5;
+            WHILE (@Sync)
+            BEGIN
+                IF (@var_İndex = 6)
+                BEGIN
+                    SET @Sync = False;
+                END
+                ELSE
+                BEGIN
+                    DELETE FROM @Ekpuan WHERE Index = @var_İndex;
+                    INSERT INTO @Ekpuan (Index, Element) VALUES (@var_İndex, @İndex2);
+                    SET @var_İndex = @var_İndex + 1;
+                    SET @İndex2 = @İndex2 + 1;
+                END
+            END
+            SET @Sonuc = CAST((SELECT Value FROM @Ekpuan WHERE Index = INT(RAND() * 6)) AS VARCHAR);
+            
+            -- Not 70 ve 90 arasında ise, 5 ila 10 arasında puan ekle.
+        END
+        ELSE
+        BEGIN
+            IF (@Puan > 49)
+            BEGIN
+                SET @İndex2 = 10;
+                WHILE (@Sync)
+                BEGIN
+                    IF (@var_İndex = 9)
+                    BEGIN
+                        SET @Sync = False;
+                    END
+                    ELSE
+                    BEGIN
+                        DELETE FROM @Ekpuan WHERE Index = @var_İndex;
+                        INSERT INTO @Ekpuan (Index, Element) VALUES (@var_İndex, @İndex2);
+                        SET @var_İndex = @var_İndex + 1;
+                        SET @İndex2 = @İndex2 + 1;
+                    END
+                END
+                SET @Sonuc = CAST((SELECT Value FROM @Ekpuan WHERE Index = INT(RAND() * 9)) AS VARCHAR);
+                
+                -- Not 50 ve 70 arasında ise, 10 ila 18 arasında puan ekle.
+            END
+            ELSE
+            BEGIN
+                IF (@Puan > 29)
+                BEGIN
+                    SET @İndex2 = 20;
+                    WHILE (@Sync)
+                    BEGIN
+                        IF (@var_İndex = 10)
+                        BEGIN
+                            SET @Sync = False;
+                        END
+                        ELSE
+                        BEGIN
+                            DELETE FROM @Ekpuan WHERE Index = @var_İndex;
+                            INSERT INTO @Ekpuan (Index, Element) VALUES (@var_İndex, @İndex2);
+                            SET @var_İndex = @var_İndex + 1;
+                            SET @İndex2 = @İndex2 + 1;
+                        END
+                    END
+                    SET @Sonuc = CAST((SELECT Value FROM @Ekpuan WHERE Index = INT(RAND() * 10)) AS VARCHAR);
+                    
+                    -- Not 30 ve 50 arasında ise, 20 ila 29 arasında puan ekle.
+                END
+                ELSE
+                BEGIN
+                    SET @İndex2 = 30;
+                    WHILE (@Sync)
+                    BEGIN
+                        IF (@var_İndex = 11)
+                        BEGIN
+                            SET @Sync = False;
+                        END
+                        ELSE
+                        BEGIN
+                            DELETE FROM @Ekpuan WHERE Index = @var_İndex;
+                            INSERT INTO @Ekpuan (Index, Element) VALUES (@var_İndex, @İndex2);
+                            SET @var_İndex = @var_İndex + 1;
+                            SET @İndex2 = @İndex2 + 1;
+                        END
+                    END
+                    SET @Sonuc = CAST((SELECT Value FROM @Ekpuan WHERE Index = INT(RAND() * 11)) AS VARCHAR);
+                    
+                    -- Not 30'dan küçük ise, 30 ila 40 arasında puan ekle.
+                END
+            END
+        END
+    END
+    
+    -- String olarak yanıt almak herzaman daha mantıklıdır. String veri tipi hem real hem de int'e (tamsayı) çevrilebilir.Real sayılar int olarak ta atanabilir.  Fakat Flowgoritm buna izin vermez. İşte birkaç örnek:
+    -- var sayı = 0.65   // Javascript
+    -- sayı = 0.65          // Python
+    -- local sayı = 0.65          // Lua
+    -- int sayı = 0.65     // C
+    
+    RETURN Sonuc;
+END;
+
+CREATE FUNCTION Puaneklesoru (VARCHAR No, INT Eskinot)
+RETURNS INT
+BEGIN
+    DECLARE @Sonuc INT;
+    
+    EXECUTE Output @No + '. Öğrenci İçin Kaç Puan Eklemek İstersiniz: ' + CHAR(13) + CHAR(13) + 'Öğrencinin Puanı: ' + @Eskinot;
+    SET @Sonuc = Input();
+    
+    RETURN Sonuc;
+END;
+
+CREATE FUNCTION Yardımloop (INT Sayı)
+RETURNS INT
+BEGIN
+    DECLARE @Sonuc INT;
+    
+    IF (@Sayı = 1 OR @Sayı = 2)
+    BEGIN
+    END
+    ELSE
+    BEGIN
+        EXECUTE Output 'Yanlış Değer Girdiniz! Sadece 1 veya 2 yazın.' + CHAR(13) + 'Yeniden Başlatılıyor..';
+        EXECUTE Delay 1000;
+        EXECUTE Output '1) Otomatik Mod Hakkında Yardım' + CHAR(13) + '2) Manuel Mod Hakkında Yardım';
+        SET @Sayı = Input();
+        EXECUTE Yardımloop @Sayı;
+    END
+    
+    -- Yardım Modülü İçin
+    -- Yanlış değer girildiğinde baştan başlatır
+    SET @Sonuc = @Sayı;
+    
+    RETURN Sonuc;
+END;
+
+CREATE FUNCTION Yardımloop2 (INT Sayı)
+RETURNS INT
+BEGIN
+    DECLARE @Sonuc INT;
+    
+    IF (@Sayı = 1 OR @Sayı = 2 OR @Sayı = 3)
+    BEGIN
+    END
+    ELSE
+    BEGIN
+        EXECUTE Output 'Yanlış Değer Girdiniz! Sadece 1, 2 veya 3 yazın.' + CHAR(13) + 'Yeniden Başlatılıyor..';
+        EXECUTE Delay 1000;
+        EXECUTE Output '1) Tüm Notlara 20 Puan Ekleme Hakkında Yardım' + CHAR(13) + '2) Manuel Puan Ekleme Hakkında Yardım' + CHAR(13) + '3) Sistemin Belirlediği Ek Puan Modülü Hakkında Yardım';
+        SET @Sayı = Input();
+        EXECUTE Yardımloop2 @Sayı;
+    END
+    SET @Sonuc = @Sayı;
+    
+    RETURN Sonuc;
+END;
+
+-- The Input Table (Value VARCHAR) contains the "input" to this program.
+-- You can change where and how data is acquired by modifying the code below.
+CREATE PROCEDURE InitInput()
+BEGIN
+    SET @InputCursor = CURSOR FOR
+    SELECT Value FROM Input;
+END;
+
+CREATE FUNCTION Input()
+RETURNS VARCHAR
+BEGIN
+    DECLARE Result VARCHAR;
+    FETCH NEXT FROM @InputCursor INTO @Result;
+    RETURN(@Result);
+END;
+
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;
