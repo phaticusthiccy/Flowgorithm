@@ -1,0 +1,102 @@
+﻿DECLARE @InputCursor CURSOR GLOBAL;
+
+CREATE PROCEDURE Main()
+BEGIN
+    EXECUTE InitInput;
+
+    DECLARE @Sayı INT;
+    DECLARE @Sonuc INT;
+    DECLARE @Giris INT;
+    DECLARE @Giris2 INT;
+    DECLARE @Tempsonuc INT;
+    DECLARE @Debug VARCHAR;
+    
+    SET @Sayı = 1;
+    SET @Sonuc = 0;
+    EXECUTE Output '2 Sayı Arasındaki Tüm Tek Sayıları Toplamak İçin İlk Sayıyı Belirleyin: ';
+    SET @Giris = Input();
+    EXECUTE Delay 1;
+    EXECUTE Output '2. Sayıyı Belirleyin: ';
+    SET @Giris2 = Input();
+    EXECUTE Delay 1;
+    EXECUTE Output 'Programın İşleyişini Görmek İçin ''Y'', Direk Sonucu Görmek İçin ''N'' yazın.';
+    SET @Debug = Input();
+    IF (@Giris > @Giris2)
+    BEGIN
+        DECLARE @Af1 INT;
+        DECLARE @Af2 INT;
+        
+        SET @Af1 = @Giris;
+        SET @Af2 = @Giris2;
+        SET @Giris = @Af2;
+        SET @Giris2 = @Af1;
+    END
+    ELSE
+    BEGIN
+        
+        -- İlk giriş, 2. girişten küçük ise program çalışmaz.
+        -- 
+        -- Eğer bu koşul sağlanırsa iki girişin yerlerini değiştirmemiz gerekir.
+    END
+    SET @Sayı = @Giris;   -- Initialize
+    WHILE (@Sayı <= @Giris2)
+    BEGIN
+        IF (@Sayı MOD 2 = 1)
+        BEGIN
+            SET @Tempsonuc = @Sonuc;
+            SET @Sonuc = @Sonuc + @Sayı;
+            IF (@Debug = 'n' OR @Debug = 'N')
+            BEGIN
+                
+                -- es geç
+            END
+            ELSE
+            BEGIN
+                EXECUTE Output CAST(@Tempsonuc AS VARCHAR) + '+' + CAST(@Sayı AS VARCHAR) + ': ' + CAST(@Sonuc AS VARCHAR);
+            END
+        END
+        SET @Sayı = @Sayı + 1;  -- Increment
+    END
+    EXECUTE Output 'Sonuc: ' + @Sonuc;
+END;
+
+CREATE FUNCTION Delay (INT Sn)
+RETURNS BIT
+BEGIN
+    DECLARE @Sonuc BIT;
+    DECLARE @Ms INT;
+    
+    SET @Ms = @Sn * 30000;
+    DECLARE @n INT;
+    
+    SET @n = 0;
+    WHILE (@n != @Ms)
+    BEGIN
+        SET @n = @n + 1;
+    END
+    SET @Sonuc = True;
+    
+    RETURN Sonuc;
+END;
+
+-- The Input Table (Value VARCHAR) contains the "input" to this program.
+-- You can change where and how data is acquired by modifying the code below.
+CREATE PROCEDURE InitInput()
+BEGIN
+    SET @InputCursor = CURSOR FOR
+    SELECT Value FROM Input;
+END;
+
+CREATE FUNCTION Input()
+RETURNS VARCHAR
+BEGIN
+    DECLARE Result VARCHAR;
+    FETCH NEXT FROM @InputCursor INTO @Result;
+    RETURN(@Result);
+END;
+
+-- The Output Table (Line VARCHAR) is being used to save output.
+CREATE PROCEDURE Output (@line VARCHAR)
+BEGIN
+    INSERT INTO Output(Line) VALUES (@line)
+END;

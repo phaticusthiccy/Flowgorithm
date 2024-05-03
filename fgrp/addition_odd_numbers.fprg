@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<flowgorithm fileversion="2.11">
+    <attributes>
+        <attribute name="name" value=""/>
+        <attribute name="authors" value="CASPER"/>
+        <attribute name="about" value=""/>
+        <attribute name="saved" value="2024-05-03 09:30:25 &#214;S"/>
+        <attribute name="created" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0wMTswMjoyNDoyMyDDllM7MjM5NQ=="/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyMi0wNC0wMTswMjoyNDo1NCDDllM7MjtDQVNQRVI7QVRUSUNVUzsyMDIyLTAzLTI1OzAzOjE4OjQ4IMOWUzt2a2kuZnByZzs1ODQ0"/>
+        <attribute name="edited" value="Q0FTUEVSO0FUVElDVVM7MjAyNC0wNS0wMzswOTozMDoyNSDDllM7NDsyNTE3"/>
+    </attributes>
+    <function name="Main" type="None" variable="">
+        <parameters/>
+        <body>
+            <declare name="say&#305;, sonuc, giris, giris2, tempsonuc" type="Integer" array="False" size=""/>
+            <declare name="debug" type="String" array="False" size=""/>
+            <assign variable="say&#305;" expression="1"/>
+            <assign variable="sonuc" expression="0"/>
+            <output expression="&quot;2 Say&#305; Aras&#305;ndaki T&#252;m Tek Say&#305;lar&#305; Toplamak &#304;&#231;in &#304;lk Say&#305;y&#305; Belirleyin: &quot;" newline="True"/>
+            <input variable="giris"/>
+            <call expression="delay(1)&#13;&#10;"/>
+            <output expression="&quot;2. Say&#305;y&#305; Belirleyin: &quot;" newline="True"/>
+            <input variable="giris2"/>
+            <call expression="delay(1)&#13;&#10;"/>
+            <output expression="&quot;Program&#305;n &#304;&#351;leyi&#351;ini G&#246;rmek &#304;&#231;in 'Y', Direk Sonucu G&#246;rmek &#304;&#231;in 'N' yaz&#305;n.&quot;" newline="True"/>
+            <input variable="debug"/>
+            <if expression="giris &gt; giris2">
+                <then>
+                    <declare name="af1" type="Integer" array="False" size=""/>
+                    <declare name="af2" type="Integer" array="False" size=""/>
+                    <assign variable="af1" expression="giris"/>
+                    <assign variable="af2" expression="giris2"/>
+                    <assign variable="giris" expression="af2"/>
+                    <assign variable="giris2" expression="af1"/>
+                </then>
+                <else>
+                    <comment text="&#304;lk giri&#351;, 2. giri&#351;ten k&#252;&#231;&#252;k ise program &#231;al&#305;&#351;maz.&#13;&#10;&#13;&#10;E&#287;er bu ko&#351;ul sa&#287;lan&#305;rsa iki giri&#351;in yerlerini de&#287;i&#351;tirmemiz gerekir."/>
+                </else>
+            </if>
+            <for variable="say&#305;" start="giris" end="giris2" direction="inc" step="1">
+                <if expression="say&#305; % 2 == 1">
+                    <then>
+                        <assign variable="tempsonuc" expression="sonuc"/>
+                        <assign variable="sonuc" expression="sonuc + say&#305;"/>
+                        <if expression="debug == &quot;n&quot; || debug == &quot;N&quot;">
+                            <then>
+                                <comment text="es ge&#231;"/>
+                            </then>
+                            <else>
+                                <output expression="ToString(tempsonuc) &amp; &quot;+&quot; &amp; ToString(say&#305;) &amp; &quot;: &quot; &amp; ToString(sonuc)" newline="True"/>
+                            </else>
+                        </if>
+                    </then>
+                    <else/>
+                </if>
+            </for>
+            <output expression="&quot;Sonuc: &quot; &amp; sonuc" newline="True"/>
+        </body>
+    </function>
+    <function name="delay" type="Boolean" variable="sonuc">
+        <parameters>
+            <parameter name="sn" type="Integer" array="False"/>
+        </parameters>
+        <body>
+            <declare name="sonuc" type="Boolean" array="False" size=""/>
+            <declare name="ms" type="Integer" array="False" size=""/>
+            <assign variable="ms" expression="sn * 30000"/>
+            <declare name="n" type="Integer" array="False" size=""/>
+            <assign variable="n" expression="0"/>
+            <while expression="n != ms">
+                <assign variable="n" expression="n + 1"/>
+            </while>
+            <assign variable="sonuc" expression="true"/>
+        </body>
+    </function>
+</flowgorithm>
